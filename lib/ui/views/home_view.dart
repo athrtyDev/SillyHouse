@@ -89,16 +89,16 @@ class _HomeViewState extends State<HomeView> {
               width: 40,
               height: 40,
               child: ProfilePicture(
-                url: Provider.of<User>(context, listen: false).profile_pic,
+                url: Provider.of<User>(context, listen: true).profile_pic,
                 onTap: () {
-                  String userType = Provider.of<User>(context, listen: false).type;
+                  String userType = Provider.of<User>(context, listen: true).type;
                   print('user type: ' + userType.toString());
                   if (userType != null && userType == "admin") Navigator.pushNamed(context, '/admin');
                 },
               ),
             ),
             SizedBox(width: 8),
-            Text('Сайн уу, ${Provider.of<User>(context, listen: false).name}!',
+            Text('Сайн уу, ${Provider.of<User>(context, listen: true).name}!',
                 style: GoogleFonts.kurale(
                   fontSize: 18,
                   color: AppColors.mainTextColor,
