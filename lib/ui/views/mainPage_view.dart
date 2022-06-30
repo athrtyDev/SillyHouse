@@ -12,8 +12,8 @@ import 'package:sillyhouseorg/ui/views/base_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainPageView extends StatefulWidget {
-  final bool uploadSuccess;
-  MainPageView({bool this.uploadSuccess});
+  final bool? uploadSuccess;
+  MainPageView({bool? this.uploadSuccess});
 
   @override
   _MainPageViewState createState() => _MainPageViewState();
@@ -32,11 +32,11 @@ class _MainPageViewState extends State<MainPageView> {
   @override
   void dispose() {
     super.dispose();
-    _pageController.dispose();
+    _pageController!.dispose();
   }
 
-  PageController _pageController;
-  DateTime currentBackPressTime;
+  PageController? _pageController;
+  DateTime? currentBackPressTime;
   int _currentIndex = 0;
 
   @override
@@ -71,7 +71,7 @@ class _MainPageViewState extends State<MainPageView> {
                         curve: Curves.easeInOutCirc,
                         onItemSelected: (index) {
                           setState(() => _currentIndex = index);
-                          _pageController.jumpToPage(index);
+                          _pageController!.jumpToPage(index);
                         },
                         items: <BottomNavyBarItem>[
                           BottomNavyBarItem(
@@ -104,10 +104,10 @@ class _MainPageViewState extends State<MainPageView> {
   Future<bool> onWillPop() {
     if (_currentIndex != 0) {
       setState(() => _currentIndex = 0);
-      _pageController.jumpToPage(0);
+      _pageController!.jumpToPage(0);
     } else {
       DateTime now = DateTime.now();
-      if (currentBackPressTime != null && now.difference(currentBackPressTime) < Duration(seconds: 1)) {
+      if (currentBackPressTime != null && now.difference(currentBackPressTime!) < Duration(seconds: 1)) {
         currentBackPressTime = now;
         SystemNavigator.pop();
       }
@@ -117,7 +117,7 @@ class _MainPageViewState extends State<MainPageView> {
   }
 
   _showUploadStatus() {
-    if (widget.uploadSuccess != null && widget.uploadSuccess) {
+    if (widget.uploadSuccess != null && widget.uploadSuccess!) {
       Flushbar(
         message: 'Бүтээл амжилттай хуулагдлаа.',
         padding: EdgeInsets.all(25),

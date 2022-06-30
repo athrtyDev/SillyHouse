@@ -9,27 +9,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ProfileModel extends BaseModel {
-  final Api _api = locator<Api>();
-  List<Post> listUserAllPosts;
-  User loggedUser;
-  List<Like> allLikes;
+  final Api? _api = locator<Api>();
+  List<Post>? listUserAllPosts;
+  late User loggedUser;
+  List<Like>? allLikes;
 
   void loadPostsByUser(BuildContext context) async {
     setState(ViewState.Busy);
     loggedUser = Provider.of<User>(context, listen: false);
-    listUserAllPosts = await _api.getPostByUser(loggedUser);
-    allLikes = await _api.getAllLikes();
+    listUserAllPosts = await _api!.getPostByUser(loggedUser);
+    allLikes = await _api!.getAllLikes();
     // count Post, skill, like
     int postTotal = 0;
     int skillTotal = 0;
     int likeTotal = 0;
     if (listUserAllPosts != null) {
-      for (Post post in listUserAllPosts) {
-        for (Like like in allLikes) {
+      for (Post post in listUserAllPosts!) {
+        for (Like like in allLikes!) {
           // Count every post's like
           if (like.postId == post.postId) {
             if (post.likeCount == null) post.likeCount = 0;
-            post.likeCount++;
+            post.likeCount = post.likeCount! + 1;
           }
           // Check if logged user liked the post
           if (post.isUserLiked == null) post.isUserLiked = false;
@@ -53,17 +53,17 @@ class ProfileModel extends BaseModel {
     post.isUserLiked = true;
     post.likeCount = post.likeCount ?? 0;
     loggedUser.likeTotal = loggedUser.likeTotal ?? 0;
-    post.likeCount++;
-    loggedUser.likeTotal++;
-    _api.likePost(post, loggedUser.id);
+    post.likeCount = post.likeCount! + 1;
+    loggedUser.likeTotal = loggedUser.likeTotal! + 1;
+    _api!.likePost(post, loggedUser.id);
     notifyListeners();
   }
 
   void dislikePost(Post post) {
     post.isUserLiked = false;
-    post.likeCount--;
-    loggedUser.likeTotal--;
-    _api.dislikePost(post, loggedUser.id);
+    post.likeCount = post.likeCount! - 1;
+    loggedUser.likeTotal = loggedUser.likeTotal! - 1;
+    _api!.dislikePost(post, loggedUser.id);
     notifyListeners();
   }
 }

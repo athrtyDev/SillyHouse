@@ -1,12 +1,12 @@
 class Notification {
-  String id;
-  String postId;
-  String userId;
-  String userName;
-  String userProfilePic;
-  String userType;
-  String comment;
-  DateTime date;
+  String? id;
+  String? postId;
+  String? userId;
+  String? userName;
+  String? userProfilePic;
+  String? userType;
+  String? comment;
+  DateTime? date;
 
   Notification({this.id, this.postId, this.userId, this.userName, this.userProfilePic, this.userType, this.comment});
 

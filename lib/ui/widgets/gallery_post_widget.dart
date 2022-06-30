@@ -12,7 +12,7 @@ class GalleryPostWidget extends StatefulWidget {
   final Post post;
   final bool isSelected;
 
-  GalleryPostWidget({@required this.post, this.isSelected = false});
+  GalleryPostWidget({required this.post, this.isSelected = false});
 
   @override
   _GalleryPostWidgetState createState() => _GalleryPostWidgetState();
@@ -39,7 +39,7 @@ class _GalleryPostWidgetState extends State<GalleryPostWidget> {
                           fit: StackFit.expand,
                           children: [
                             CachedNetworkImage(
-                              imageUrl: widget.post.coverDownloadUrl,
+                              imageUrl: widget.post.coverDownloadUrl!,
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) => Icon(Icons.error),
                             ),
@@ -54,7 +54,7 @@ class _GalleryPostWidgetState extends State<GalleryPostWidget> {
                 Positioned(
                   bottom: 5,
                   left: 5,
-                  child: OnImageText(text: widget.post.activity.name),
+                  child: OnImageText(text: widget.post.activity!.name),
                 ),
               ],
             )),
@@ -62,7 +62,7 @@ class _GalleryPostWidgetState extends State<GalleryPostWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ActivityTypeWidget(type: widget.post.activity.activityType),
+                ActivityTypeWidget(type: widget.post.activity!.activityType),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -93,9 +93,9 @@ class _GalleryPostWidgetState extends State<GalleryPostWidget> {
                         Icon(Icons.comment, size: 16, color: Colors.grey),
                         SizedBox(width: 4),
                         Text(
-                            (widget.post.listComment == null || widget.post.listComment.isEmpty)
+                            (widget.post.listComment == null || widget.post.listComment!.isEmpty)
                                 ? '0'
-                                : widget.post.listComment.length.toString(),
+                                : widget.post.listComment!.length.toString(),
                             style: GoogleFonts.kurale(color: Colors.black54, fontSize: 16)),
                       ],
                     )),

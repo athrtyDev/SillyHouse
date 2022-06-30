@@ -1,9 +1,9 @@
 class ActivityType {
-  String id;
-  String name;
-  String type;
-  String description;
-  String image;
+  String? id;
+  String? name;
+  String? type;
+  String? description;
+  String? image;
 
   ActivityType({this.id, this.name, this.image, this.type, this.description});
 

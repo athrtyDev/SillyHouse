@@ -10,9 +10,9 @@ import 'package:sillyhouseorg/core/services/tool.dart';
 import 'package:sillyhouseorg/ui/globals/color.dart';
 
 class TakePicturePage extends StatefulWidget {
-  final Post post;
+  final Post? post;
 
-  TakePicturePage({@required this.post});
+  TakePicturePage({required this.post});
 
   @override
   _TakePicturePageState createState() => _TakePicturePageState();
@@ -21,12 +21,12 @@ class TakePicturePage extends StatefulWidget {
 class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingObserver {
   final fileName = DateTime.now().millisecondsSinceEpoch.toString();
   //var vidPath;
-  CameraController _cameraController;
-  Future<void> _initializeCameraControllerFuture;
+  late CameraController _cameraController;
+  Future<void>? _initializeCameraControllerFuture;
   int _selectedIndex = 0;
   bool _start = false;
   bool _isRec = false;
-  String whichCamera;
+  String? whichCamera;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -41,7 +41,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    CameraDescription camera = widget.post.cameras[0];
+    CameraDescription camera = widget.post!.cameras[0];
     whichCamera = 'back';
     _cameraController = CameraController(camera, ResolutionPreset.medium, imageFormatGroup: ImageFormatGroup.jpeg);
     _initializeCameraControllerFuture = _cameraController.initialize();
@@ -66,7 +66,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
     PickedMedia media = new PickedMedia();
     media.type = type;
     media.storageFile = await Tool.compressImage(File(pickedFile.path));
-    widget.post.pickedMedia = media;
+    widget.post!.pickedMedia = media;
     Navigator.pushNamed(context, '/publish', arguments: widget.post);
   }
 
@@ -83,7 +83,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
         media.path = fileImage.path;
         media.type = 'image';
         media.storageFile = await Tool.compressImage(File(fileImage.path));
-        widget.post.pickedMedia = media;
+        widget.post!.pickedMedia = media;
         //Navigator.pop(context, media);
         Navigator.pushNamed(context, '/publish', arguments: widget.post);
       } else {
@@ -103,7 +103,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
           media.path = file.path;
           media.type = 'video';
           media.storageFile = File(file.path);
-          widget.post.pickedMedia = media;
+          widget.post!.pickedMedia = media;
           //Navigator.pop(context, media);
           Navigator.pushNamed(context, '/publish', arguments: widget.post);
         }
@@ -156,7 +156,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
                   onTap: () => Navigator.of(context).pop(),
                   child: Container(
                     padding: EdgeInsets.all(10),
-                    child: Icon(Icons.close_rounded, color: AppColors.mainTextColor),
+                    child: Icon(Icons.close_rounded, color: AppColors.textColor),
                   ),
                 ))
           ],
@@ -217,12 +217,12 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
                     onPressed: () {
                       setState(() {
                         if (whichCamera == 'back') {
-                          CameraDescription camera = widget.post.cameras[1];
+                          CameraDescription camera = widget.post!.cameras[1];
                           whichCamera = 'front';
                           _cameraController = CameraController(camera, ResolutionPreset.medium);
                           _initializeCameraControllerFuture = _cameraController.initialize();
                         } else {
-                          CameraDescription camera = widget.post.cameras[0];
+                          CameraDescription camera = widget.post!.cameras[0];
                           whichCamera = 'back';
                           _cameraController = CameraController(camera, ResolutionPreset.medium);
                           _initializeCameraControllerFuture = _cameraController.initialize();

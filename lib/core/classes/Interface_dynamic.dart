@@ -1,15 +1,15 @@
 import 'package:sillyhouseorg/core/services/tool.dart';
 
 class InterfaceDynamic {
-  String homeActivityInfo;
-  String homeDanceUrl;
-  String homeDiscoverUrl;
-  String homeDiyUrl;
-  String homeGreeting;
-  String homePosterUrl;
-  String appVersion;
-  String homeActivityId;
-  String homeActivityType;
+  String? homeActivityInfo;
+  String? homeDanceUrl;
+  String? homeDiscoverUrl;
+  String? homeDiyUrl;
+  String? homeGreeting;
+  String? homePosterUrl;
+  String? appVersion;
+  String? homeActivityId;
+  String? homeActivityType;
 
   InterfaceDynamic(
       {this.homeActivityInfo,

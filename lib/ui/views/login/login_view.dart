@@ -35,7 +35,7 @@ class _LoginViewState extends State<LoginView> {
             setState(() {});
           },
           child: Scaffold(
-              appBar: myAppBar(title: "Нэвтрэх", leadingFunction: () => Navigator.pop(context)),
+              appBar: myAppBar(title: "Нэвтрэх", leadingFunction: () => Navigator.pop(context)) as PreferredSizeWidget?,
               backgroundColor: Colors.white,
               body: Stack(
                 fit: StackFit.expand,
@@ -97,7 +97,7 @@ class _LoginViewState extends State<LoginView> {
 
   _login(LoginModel model) async {
     if (_nameInput.text != '' && _passwordInput.text != '') {
-      User user = await model.login(_nameInput.text, _passwordInput.text);
+      User? user = await model.login(_nameInput.text, _passwordInput.text);
       if (user != null) {
         FocusScope.of(context).unfocus();
         Navigator.pushNamed(context, '/mainPage', arguments: null);

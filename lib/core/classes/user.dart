@@ -1,20 +1,20 @@
 import 'dart:io';
 
 class User {
-  String id;
-  String name;
-  String password;
-  int age;
-  String email;
-  String gender;
-  String profile_pic;
-  String registeredDate;
-  String type; // null=normal, teacher=online zuwluh bagsh
+  String? id;
+  String? name;
+  String? password;
+  int? age;
+  String? email;
+  String? gender;
+  String? profile_pic;
+  String? registeredDate;
+  String? type; // null=normal, teacher=online zuwluh bagsh
   // tuslah
-  int postTotal;
-  int skillTotal;
-  int likeTotal;
-  File profileFile;
+  int? postTotal;
+  int? skillTotal;
+  int? likeTotal;
+  File? profileFile;
 
   User(
       {this.id,

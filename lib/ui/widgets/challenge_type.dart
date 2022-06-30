@@ -5,16 +5,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sillyhouseorg/ui/globals/color.dart';
 
 class ChallengeType extends StatelessWidget {
-  final String name;
-  final Widget image;
-  final Function onTap;
+  final String? name;
+  final Widget? image;
+  final Function? onTap;
 
-  const ChallengeType({Key key, this.name, this.image, this.onTap}) : super(key: key);
+  const ChallengeType({Key? key, this.name, this.image, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: this.onTap,
+      onTap: this.onTap as void Function()?,
       child: Column(
         children: [
           Expanded(
@@ -26,8 +26,8 @@ class ChallengeType extends StatelessWidget {
             ),
           ),
           Text(
-            this.name,
-            style: GoogleFonts.kurale(fontSize: 15, color: AppColors.mainTextColor.withOpacity(0.7)),
+            this.name!,
+            style: GoogleFonts.kurale(fontSize: 15, color: AppColors.textColor.withOpacity(0.7)),
           ),
         ],
       ),

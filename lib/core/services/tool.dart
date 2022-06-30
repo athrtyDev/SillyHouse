@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:sillyhouseorg/core/classes/activity.dart';
@@ -8,14 +9,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 class Tool {
-  static bool isNullOrZero(double d) {
-    if (d == null || d == 0)
-      return true;
-    else
-      return false;
-  }
-
-  static String nullEmptyString(String s) {
+  static String? nullEmptyString(String? s) {
     if (s == null || s == '')
       return null;
     else
@@ -26,7 +20,7 @@ class Tool {
     return d.toStringAsFixed(d.truncateToDouble() == d ? 0 : 2);
   }
 
-  static Future<File> compressImage(File file) async {
+  static Future<File?> compressImage(File file) async {
     try {
       final dir = await path_provider.getTemporaryDirectory();
       final targetPath = dir.absolute.path + "/temp.jpg";
@@ -50,7 +44,7 @@ class Tool {
             responseType: ResponseType.bytes,
             followRedirects: false,
             validateStatus: (status) {
-              return status < 500;
+              return status! < 500;
             }),
       );
       print(response.headers);
@@ -64,20 +58,20 @@ class Tool {
     }
   }
 
-  static Future<String> cacheActivity(Activity activity, String path, Dio dio) async {
+  static Future<String?> cacheActivity(Activity activity, String path, Dio dio) async {
     try {
       // Template: cache/discover4_v1_cover.png
-      String fullPath = path + "/" + activity.activityType + activity.id + "_v" + activity.version.toString() + "_cover.png";
+      String fullPath = path + "/" + activity.activityType! + activity.id! + "_v" + activity.version.toString() + "_cover.png";
       // check if file is cached already
       if (await File(fullPath).exists()) {
         print('cacheeee EXISTS: ' + fullPath);
       } else {
         print('cacheeee file not exists. downloading: ' + fullPath);
-        await download(dio, activity.coverImageUrl, fullPath);
+        await download(dio, activity.coverImageUrl!, fullPath);
         // clear previous cache with outdated version
-        if (activity.version > 1) {
+        if (activity.version! > 1) {
           String checkPath =
-              path + "/" + activity.activityType + activity.id + "_v" + (activity.version - 1).toString() + "_cover.png";
+              path + "/" + activity.activityType! + activity.id! + "_v" + (activity.version! - 1).toString() + "_cover.png";
           if (await File(checkPath).exists()) {
             print('cacheeee deleting: ' + checkPath);
             File(checkPath).delete();
@@ -91,13 +85,13 @@ class Tool {
     }
   }
 
-  static Future<String> cacheMedia(Activity activity, Media media, int mediaCount, String path, Dio dio) async {
+  static Future<String?> cacheMedia(Activity activity, Media media, int mediaCount, String path, Dio dio) async {
     try {
       // Template: cache/discover4_v1_media1.png
       String fullPath = path +
           "/" +
-          activity.activityType +
-          activity.id +
+          activity.activityType! +
+          activity.id! +
           "_v" +
           activity.version.toString() +
           "_media" +
@@ -108,15 +102,15 @@ class Tool {
         print('cacheeee EXISTS: ' + fullPath);
       } else {
         print('cacheeee file not exists. downloading: ' + fullPath);
-        await download(dio, media.url, fullPath);
+        await download(dio, media.url!, fullPath);
         // clear previous cache with outdated version
-        if (activity.version > 1) {
+        if (activity.version! > 1) {
           String checkPath = path +
               "/" +
-              activity.activityType +
-              activity.id +
+              activity.activityType! +
+              activity.id! +
               "_v" +
-              (activity.version - 1).toString() +
+              (activity.version! - 1).toString() +
               "_media" +
               mediaCount.toString() +
               (media.type == 'image' ? ".png" : ".mp4");
@@ -133,19 +127,19 @@ class Tool {
     }
   }
 
-  static Future<String> cachePost(Post post) async {
+  static Future<String?> cachePost(Post post) async {
     try {
-      var cacheDir = await getExternalCacheDirectories();
+      var cacheDir = await (getExternalCacheDirectories() as FutureOr<List<Directory>>);
       String path = cacheDir.first.path;
       var dio = Dio();
       // post93defbb6-3a65-4a7b-8c09-905e6af9f1c1
-      String fullPath = path + "/post" + post.postId;
+      String fullPath = path + "/post" + post.postId!;
       // check if file is cached already
       if (await File(fullPath).exists()) {
         print('cacheeee EXISTS: ' + fullPath);
       } else {
         print('cacheeee file not exists. downloading: ' + fullPath);
-        await download(dio, post.mediaDownloadUrl, fullPath);
+        await download(dio, post.mediaDownloadUrl!, fullPath);
       }
       return fullPath;
     } catch (e) {
@@ -156,7 +150,7 @@ class Tool {
 
   static Future<void> cacheNewPublishedPost(String postId, var fileBytes) async {
     // post93defbb6-3a65-4a7b-8c09-905e6af9f1c1
-    var cacheDir = await getExternalCacheDirectories();
+    var cacheDir = await (getExternalCacheDirectories() as FutureOr<List<Directory>>);
     String path = cacheDir.first.path;
     String fullPath = path + "/post" + postId;
     await File(fullPath).writeAsBytes(fileBytes);

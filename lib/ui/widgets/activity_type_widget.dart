@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sillyhouseorg/utils/utils.dart';
 
 class ActivityTypeWidget extends StatelessWidget {
-  final String type;
-  const ActivityTypeWidget({Key key, this.type}) : super(key: key);
+  final String? type;
+  const ActivityTypeWidget({Key? key, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +22,6 @@ class ActivityTypeWidget extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
         height: 25,
         child: Center(
-            child: Text(Utils.getActivityTypeName(type).name, style: GoogleFonts.kurale(color: Colors.white, fontSize: 11))));
+            child: Text(Utils.getActivityTypeName(type).name!, style: GoogleFonts.kurale(color: Colors.white, fontSize: 11))));
   }
 }

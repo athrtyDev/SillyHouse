@@ -1,12 +1,12 @@
 class Comment {
-  String commentId;
-  String postId;
-  String userId;
-  String userName;
-  String userProfilePic;
-  String userType;
-  String comment;
-  DateTime date;
+  String? commentId;
+  String? postId;
+  String? userId;
+  String? userName;
+  String? userProfilePic;
+  String? userType;
+  String? comment;
+  DateTime? date;
 
   Comment({this.commentId, this.postId, this.userId, this.userName, this.userProfilePic, this.userType, this.comment});
 

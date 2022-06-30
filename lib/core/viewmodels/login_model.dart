@@ -7,24 +7,24 @@ import 'package:sillyhouseorg/locator.dart';
 import 'package:uuid/uuid.dart';
 
 class LoginModel extends BaseModel {
-  final AuthenticationService _authenticationService = locator<AuthenticationService>();
+  final AuthenticationService? _authenticationService = locator<AuthenticationService>();
 
   var customer;
-  String errorMessage;
+  String? errorMessage;
 
-  Future<User> login(String name, String password) async {
+  Future<User?> login(String name, String password) async {
     setState(ViewState.Busy);
     name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
-    User user = await _authenticationService.fetchUser(name, password);
+    User? user = await _authenticationService!.fetchUser(name, password);
     setState(ViewState.Idle);
     return user;
   }
 
-  Future<bool> registerUser(String name, String password, String age, String email, String gender, File profileFile) async {
+  Future<bool> registerUser(String name, String password, String age, String email, String gender, File? profileFile) async {
     setState(ViewState.Busy);
     // Check user name exists
     name = name.toLowerCase()[0].toUpperCase() + name.toLowerCase().substring(1);
-    if (await _authenticationService.checkUserNameExists(name)) {
+    if (await _authenticationService!.checkUserNameExists(name)) {
       setState(ViewState.Idle);
       return false;
     } else {
@@ -42,7 +42,7 @@ class LoginModel extends BaseModel {
       user.likeTotal = 0;
       user.skillTotal = 0;
       user.profileFile = profileFile;
-      await _authenticationService.registerUser(user);
+      await _authenticationService!.registerUser(user);
 
       setState(ViewState.Idle);
       return true;

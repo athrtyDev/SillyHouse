@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sillyhouseorg/core/classes/Interface_dynamic.dart';
@@ -16,37 +17,37 @@ import 'package:video_compress/video_compress.dart';
 class Api {
   var client = new http.Client();
 
-  Future<InterfaceDynamic> getInterfaceDynamic() async {
+  Future<InterfaceDynamic?> getInterfaceDynamic() async {
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance.collection('Interface_dynamic').get();
 
     if (itemSnapshot.docs.isEmpty) {
       return null;
     } else {
-      InterfaceDynamic dynamic = InterfaceDynamic.fromJson(itemSnapshot.docs.first.data());
-      return dynamic;
+      InterfaceDynamic _dynamic = InterfaceDynamic.fromJson(itemSnapshot.docs.first.data() as Map<String, dynamic>);
+      return _dynamic;
     }
   }
 
-  Future<List<ActivityType>> getActivityType() async {
+  Future<List<ActivityType>?> getActivityType() async {
     QuerySnapshot itemSnapshot =
         await FirebaseFirestore.instance.collection('Activity_type').orderBy('id', descending: false).get();
 
     if (itemSnapshot.docs.isEmpty)
       return null;
     else
-      return itemSnapshot.docs.map((type) => new ActivityType.fromJson(type.data())).toList();
+      return itemSnapshot.docs.map((type) => new ActivityType.fromJson(type.data() as Map<String, dynamic>)).toList();
   }
 
-  Future<List<Activity>> getAllActivity() async {
+  Future<List<Activity>?> getAllActivity() async {
     // Important!: Return both active and inactive
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance.collection('Activity').orderBy('id', descending: false).get();
     if (itemSnapshot.docs.isEmpty)
       return null;
     else {
       List<Activity> list = [];
-      itemSnapshot.docs.map((activity) => new Activity.fromJson(activity.data())).toList();
+      itemSnapshot.docs.map((activity) => new Activity.fromJson(activity.data() as Map<String, dynamic>)).toList();
       for (var item in itemSnapshot.docs) {
-        Activity activity = new Activity.fromJson(item.data());
+        Activity activity = new Activity.fromJson(item.data() as Map<String, dynamic>);
         activity.docId = item.id;
         list.add(activity);
       }
@@ -54,7 +55,7 @@ class Api {
     }
   }
 
-  Future<List<Activity>> getActivityByType(String activityType) async {
+  Future<List<Activity>?> getActivityByType(String activityType) async {
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance
         .collection('Activity')
         .where('isActive', isEqualTo: true)
@@ -64,10 +65,10 @@ class Api {
     if (itemSnapshot.docs.isEmpty)
       return null;
     else
-      return itemSnapshot.docs.map((activity) => new Activity.fromJson(activity.data())).toList();
+      return itemSnapshot.docs.map((activity) => new Activity.fromJson(activity.data() as Map<String, dynamic>)).toList();
   }
 
-  Future<Activity> getActivityById(String id, String type) async {
+  Future<Activity?> getActivityById(String id, String type) async {
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance
         .collection('Activity')
         .where('activityType', isEqualTo: type)
@@ -77,12 +78,12 @@ class Api {
     if (itemSnapshot.docs.isEmpty)
       return null;
     else {
-      Activity activity = Activity.fromJson(itemSnapshot.docs[0].data());
+      Activity activity = Activity.fromJson(itemSnapshot.docs[0].data() as Map<String, dynamic>);
       return activity;
     }
   }
 
-  Future<String> savePost(Post post, File file) async {
+  Future<String?> savePost(Post post, File? file) async {
     try {
       File thumbnailFile;
       String coverDownloadUrl = '';
@@ -90,17 +91,17 @@ class Api {
       if (post.uploadMediaType == 'video') {
         // Compress video
         print('Compress video starting... ' + DateTime.now().toString());
-        MediaInfo mediaInfo = await VideoCompress.compressVideo(
-          file.path,
+        MediaInfo mediaInfo = await (VideoCompress.compressVideo(
+          file!.path,
           quality: VideoQuality.MediumQuality,
           deleteOrigin: true,
           includeAudio: true,
-        );
+        ) as FutureOr<MediaInfo>);
         print('Compress video success! ' + DateTime.now().toString());
         file = mediaInfo.file;
 
         // Thumbnail image
-        thumbnailFile = await VideoCompress.getFileThumbnail(mediaInfo.path,
+        thumbnailFile = await VideoCompress.getFileThumbnail(mediaInfo.path!,
             quality: 30, // default(100)
             position: -1 // default(-1)
             );
@@ -109,13 +110,13 @@ class Api {
         coverDownloadUrl = await uploadFile(
             thumbnailFile,
             "post/" +
-                post.user.name +
+                post.user!.name! +
                 "_" +
-                post.user.id +
+                post.user!.id! +
                 "/" +
-                post.activity.activityType +
+                post.activity!.activityType! +
                 "_" +
-                post.activity.id +
+                post.activity!.id! +
                 "_" +
                 postId +
                 "_cover",
@@ -124,15 +125,15 @@ class Api {
 
       // save media to storage
       String downloadUrl = await uploadFile(
-          file,
+          file!,
           "post/" +
-              post.user.name +
+              post.user!.name! +
               "_" +
-              post.user.id +
+              post.user!.id! +
               "/" +
-              post.activity.activityType +
+              post.activity!.activityType! +
               "_" +
-              post.activity.id +
+              post.activity!.id! +
               "_" +
               postId +
               "_media",
@@ -142,13 +143,13 @@ class Api {
       Map<String, dynamic> postJson = new Map();
       postJson['postId'] = postId;
       postJson['uploadMediaType'] = post.uploadMediaType;
-      postJson['userId'] = post.user.id;
-      postJson['userName'] = post.user.name;
-      postJson['activityId'] = post.activity.id;
-      postJson['activityName'] = post.activity.name;
-      postJson['activityType'] = post.activity.activityType;
-      postJson['activityDifficulty'] = post.activity.difficulty;
-      postJson['skillPoints'] = post.activity.skill;
+      postJson['userId'] = post.user!.id;
+      postJson['userName'] = post.user!.name;
+      postJson['activityId'] = post.activity!.id;
+      postJson['activityName'] = post.activity!.name;
+      postJson['activityType'] = post.activity!.activityType;
+      postJson['activityDifficulty'] = post.activity!.difficulty;
+      postJson['skillPoints'] = post.activity!.skill;
       postJson['likeCount'] = 0;
       postJson['mediaDownloadUrl'] = downloadUrl;
       postJson['coverDownloadUrl'] = post.uploadMediaType == 'video' ? coverDownloadUrl : downloadUrl;
@@ -168,21 +169,21 @@ class Api {
       });
       return postId;
     } catch (e) {
-      print('SavePost function error:' + e);
+      print('SavePost function error:' + e.toString());
       return null;
     }
   }
 
-  Future<List<Post>> getAllPost() async {
+  Future<List<Post>?> getAllPost() async {
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Post').orderBy('postDate', descending: true).get();
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((post) => new Post.fromJson(post.data())).toList();
+      return postSnapshot.docs.map((post) => new Post.fromJson(post.data() as Map<String, dynamic>)).toList();
     }
   }
 
-  Future<List<Post>> getPostByUser(User user) async {
+  Future<List<Post>?> getPostByUser(User user) async {
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
         .where('userId', isEqualTo: user.id)
@@ -191,11 +192,11 @@ class Api {
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((post) => new Post.fromJson(post.data())).toList();
+      return postSnapshot.docs.map((post) => new Post.fromJson(post.data() as Map<String, dynamic>)).toList();
     }
   }
 
-  Future<List<Post>> getPostStory() async {
+  Future<List<Post>?> getPostStory() async {
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
         .where('isFeatured', isEqualTo: true)
@@ -204,11 +205,11 @@ class Api {
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((post) => new Post.fromJson(post.data())).toList();
+      return postSnapshot.docs.map((post) => new Post.fromJson(post.data() as Map<String, dynamic>)).toList();
     }
   }
 
-  Future<List<Post>> getPostByActivity(Activity activity) async {
+  Future<List<Post>?> getPostByActivity(Activity activity) async {
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
         //.where('activityType', isEqualTo: activity.activityType)
@@ -218,7 +219,7 @@ class Api {
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((post) => new Post.fromJson(post.data())).toList();
+      return postSnapshot.docs.map((post) => new Post.fromJson(post.data() as Map<String, dynamic>)).toList();
     }
   }
 
@@ -230,15 +231,15 @@ class Api {
     });
 
     // delete file from storage
-    Reference ref = await FirebaseStorage.instance.refFromURL(post.mediaDownloadUrl);
+    Reference ref = await FirebaseStorage.instance.refFromURL(post.mediaDownloadUrl!);
     await ref.delete();
-    print('deleting media... ' + post.mediaDownloadUrl);
+    print('deleting media... ' + post.mediaDownloadUrl!);
     print('Successfully deleted MEDIA storage item');
 
     if (post.uploadMediaType == 'video') {
-      ref = await FirebaseStorage.instance.refFromURL(post.coverDownloadUrl);
+      ref = await FirebaseStorage.instance.refFromURL(post.coverDownloadUrl!);
       await ref.delete();
-      print('deleting cover... ' + post.coverDownloadUrl);
+      print('deleting cover... ' + post.coverDownloadUrl!);
       print('Successfully deleted COVER storage item');
     }
 
@@ -249,7 +250,7 @@ class Api {
     }
   }
 
-  Future<List<Comment>> getListComment(String postId) async {
+  Future<List<Comment>?> getListComment(String? postId) async {
     QuerySnapshot postSnapshot;
     if (postId == null || postId == '') {
       postSnapshot = await FirebaseFirestore.instance.collection('Comment').orderBy('date', descending: true).get();
@@ -264,7 +265,7 @@ class Api {
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((comment) => new Comment.fromJson(comment.data())).toList();
+      return postSnapshot.docs.map((comment) => new Comment.fromJson(comment.data() as Map<String, dynamic>)).toList();
     }
   }
 
@@ -273,16 +274,16 @@ class Api {
     ref.doc().set(newComment.toJson());
   }
 
-  Future<List<Like>> getAllLikes() async {
+  Future<List<Like>?> getAllLikes() async {
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Like').get();
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((like) => new Like.fromJson(like.data())).toList();
+      return postSnapshot.docs.map((like) => new Like.fromJson(like.data() as Map<String, dynamic>)).toList();
     }
   }
 
-  void likePost(Post post, String userId) {
+  void likePost(Post post, String? userId) {
     Like like = new Like();
     like.postId = post.postId;
     like.likedUserId = userId;
@@ -290,7 +291,7 @@ class Api {
     ref.doc().set(like.toJson());
   }
 
-  void dislikePost(Post post, String userId) {
+  void dislikePost(Post post, String? userId) {
     FirebaseFirestore.instance
         .collection('Like')
         .where("likedUserId", isEqualTo: userId)
@@ -301,7 +302,7 @@ class Api {
     });
   }
 
-  Future<void> deleteComment(String commentId) async {
+  Future<void> deleteComment(String? commentId) async {
     FirebaseFirestore.instance.collection('Comment').where("commentId", isEqualTo: commentId).get().then((snapshot) {
       snapshot.docs.first.reference.delete();
     });
@@ -316,7 +317,7 @@ class Api {
     FirebaseFirestore.instance.collection('Activity').doc(activity.docId).update(activity.toJson());
   }
 
-  Future<String> uploadFile(File file, String path, String type) async {
+  Future<String> uploadFile(File file, String path, String? type) async {
     type = type == 'image' ? 'image/jpeg' : 'video/mp4';
     print('File upload starting... ' + DateTime.now().toString());
     UploadTask fileUploadTask = FirebaseStorage.instance.ref().child(path).putFile(file, SettableMetadata(contentType: type));
@@ -332,7 +333,7 @@ class Api {
     if (itemSnapshot.docs.isEmpty)
       return ChallengeSubmit.initial();
     else
-      return ChallengeSubmit.fromJson(itemSnapshot.docs[0].data(), itemSnapshot.docs[0].id);
+      return ChallengeSubmit.fromJson(itemSnapshot.docs[0].data() as Map<String, dynamic>, itemSnapshot.docs[0].id);
   }
 
   Future<void> createChallengeSubmit(ChallengeSubmit submit) async {

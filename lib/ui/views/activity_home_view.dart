@@ -10,30 +10,30 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sillyhouseorg/ui/widgets/activity_tile.dart';
 
 class ActivityHomeView extends StatefulWidget {
-  final List<ActivityType> listType;
-  ActivityType selectedType;
+  final List<ActivityType>? listType;
+  ActivityType? selectedType;
 
-  ActivityHomeView({@required this.listType, this.selectedType});
+  ActivityHomeView({required this.listType, this.selectedType});
 
   @override
   _ActivityHomeViewState createState() => _ActivityHomeViewState();
 }
 
 class _ActivityHomeViewState extends State<ActivityHomeView> {
-  ScrollController scrollViewController;
-  List<Widget> listTab;
-  String selectedTab;
+  ScrollController? scrollViewController;
+  List<Widget>? listTab;
+  String? selectedTab;
 
   @override
   void initState() {
     super.initState();
     scrollViewController = ScrollController();
-    selectedTab = widget.listType[0].type;
-    if (widget.selectedType == null) widget.selectedType = widget.listType[0];
+    selectedTab = widget.listType![0].type;
+    if (widget.selectedType == null) widget.selectedType = widget.listType![0];
 
-    for (int i = 0; i < widget.listType.length; i++)
-      if (widget.listType[i].id == widget.selectedType.id) {
-        selectedTab = widget.listType[i].type;
+    for (int i = 0; i < widget.listType!.length; i++)
+      if (widget.listType![i].id == widget.selectedType!.id) {
+        selectedTab = widget.listType![i].type;
         break;
       }
   }
@@ -41,13 +41,13 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
   @override
   void dispose() {
     super.dispose();
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseView<ActivityHomeModel>(
-      onModelReady: (model) => model.getActivityList(widget.selectedType.type),
+      onModelReady: (model) => model.getActivityList(widget.selectedType!.type),
       builder: (context, model, child) => WillPopScope(
           onWillPop: () {
             Navigator.of(context).pushNamedAndRemoveUntil('/mainPage', (Route<dynamic> route) => false);
@@ -61,7 +61,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                 backgroundColor: AppColors.whiteColor,
                 leading: InkWell(
                   onTap: () => Navigator.of(context).pop(),
-                  child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.mainTextColor),
+                  child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.textColor),
                 ),
                 bottom: PreferredSize(
                   preferredSize: Size.fromHeight(50),
@@ -70,7 +70,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        for (var type in widget.listType)
+                        for (var type in widget.listType!)
                           Expanded(
                             child: InkWell(
                               onTap: () {
@@ -93,15 +93,15 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                       opacity: selectedTab == type.type ? 1 : 0.7,
                                       child: CachedNetworkImage(
                                         height: 25,
-                                        imageUrl: type.image,
+                                        imageUrl: type.image!,
                                         errorWidget: (context, url, error) => Icon(Icons.error),
                                       ),
                                     ),
                                     SizedBox(height: 4),
-                                    Text(type.name,
+                                    Text(type.name!,
                                         style: GoogleFonts.kurale(
                                           fontSize: 13,
-                                          color: selectedTab == type.type ? AppColors.mainTextColor : Colors.black54,
+                                          color: selectedTab == type.type ? AppColors.textColor : Colors.black54,
                                         )),
                                   ],
                                 ),
@@ -128,7 +128,7 @@ class _ActivityHomeViewState extends State<ActivityHomeView> {
                                 scrollDirection: Axis.vertical,
                                 crossAxisSpacing: 5,
                                 mainAxisSpacing: 5,
-                                children: model.mapActivity[selectedTab].map((Activity activity) {
+                                children: model.mapActivity[selectedTab]!.map((Activity activity) {
                                   return ActivityTile(
                                     activity: activity,
                                     color: AppColors.whiteColor,

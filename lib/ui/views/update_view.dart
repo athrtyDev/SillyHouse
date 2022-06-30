@@ -6,7 +6,7 @@ import 'package:sillyhouseorg/core/viewmodels/home_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UpdateView extends StatefulWidget {
-  UpdateView({Key key}) : super(key: key);
+  UpdateView({Key? key}) : super(key: key);
 
   @override
   _UpdateViewState createState() => _UpdateViewState();

@@ -7,7 +7,7 @@ class MyStoryView extends StatefulWidget {
   final List<StoryType> listStoryType;
   final int startingIndex;
 
-  const MyStoryView({@required this.listStoryType, this.startingIndex = 0});
+  const MyStoryView({required this.listStoryType, this.startingIndex = 0});
 
   @override
   State<MyStoryView> createState() => _MyStoryViewState();
@@ -28,7 +28,7 @@ class _MyStoryViewState extends State<MyStoryView> {
           momentBuilder: (context, index) => Stack(
             fit: StackFit.expand,
             children: [
-              widget.listStoryType[index].media,
+              widget.listStoryType[index].media!,
               _topShadow(),
               Positioned(
                 left: 15,

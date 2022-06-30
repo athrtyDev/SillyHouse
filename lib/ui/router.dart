@@ -31,21 +31,21 @@ class AppRouter {
       case '/register':
         return MaterialPageRoute(builder: (_) => RegisterView());
       case '/mainPage':
-        var uploadSuccess = settings.arguments as bool;
+        var uploadSuccess = settings.arguments as bool?;
         return MaterialPageRoute(builder: (_) => MainPageView(uploadSuccess: uploadSuccess));
       case '/activity_list':
         dynamic args = settings.arguments;
-        List<ActivityType> listType = args['listType'];
-        ActivityType selectedType = args['selectedType'];
+        List<ActivityType>? listType = args['listType'];
+        ActivityType? selectedType = args['selectedType'];
         return MaterialPageRoute(builder: (_) => ActivityHomeView(listType: listType, selectedType: selectedType));
       case '/activity_instruction':
-        var activity = settings.arguments as Activity;
+        var activity = settings.arguments as Activity?;
         return MaterialPageRoute(builder: (_) => ActivityInstructionView(activity: activity));
       case '/post_detail':
-        var post = settings.arguments as Post;
+        var post = settings.arguments as Post?;
         return MaterialPageRoute(builder: (_) => PostDetailView(post: post));
       case '/publish':
-        var post = settings.arguments as Post;
+        var post = settings.arguments as Post?;
         return MaterialPageRoute(builder: (_) => PublishView(post: post));
       case '/profile':
         return MaterialPageRoute(builder: (_) => ProfileView());
@@ -60,7 +60,7 @@ class AppRouter {
       case '/challenge_home':
         return MaterialPageRoute(builder: (_) => ChallengeHomeView());
       case '/choose_challenge_post':
-        List<Post> listUserPost = settings.arguments;
+        List<Post>? listUserPost = settings.arguments as List<Post>?;
         return MaterialPageRoute(builder: (_) => ChooseChallengePostView(listUserPost: listUserPost));
       default:
         return MaterialPageRoute(

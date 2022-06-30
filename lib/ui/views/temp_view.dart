@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sillyhouseorg/core/viewmodels/home_model.dart';
 
 class TempView extends StatefulWidget {
-  TempView({Key key}) : super(key: key);
+  TempView({Key? key}) : super(key: key);
 
   @override
   _TempViewState createState() => _TempViewState();

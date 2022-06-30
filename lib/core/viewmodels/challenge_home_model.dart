@@ -8,9 +8,9 @@ import 'package:sillyhouseorg/core/viewmodels/base_model.dart';
 import 'package:sillyhouseorg/locator.dart';
 
 class ChallengeHomeModel extends BaseModel {
-  final Api _api = locator<Api>();
-  List<WeeklyChallenge> listChallenge;
-  List<Post> listUserPosts;
+  final Api? _api = locator<Api>();
+  late List<WeeklyChallenge> listChallenge;
+  List<Post>? listUserPosts;
 
   void initData(User loggedUser) async {
     setState(ViewState.Busy);
@@ -24,7 +24,7 @@ class ChallengeHomeModel extends BaseModel {
       title: "Ялагч 1 дэх өдөр тодроно.",
       icon: Icon(Icons.wine_bar, size: 15, color: Colors.white),
     ));
-    listUserPosts = await _api.getPostByUser(loggedUser);
+    listUserPosts = await _api!.getPostByUser(loggedUser);
     setState(ViewState.Idle);
     notifyListeners();
   }

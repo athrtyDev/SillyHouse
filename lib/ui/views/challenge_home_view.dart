@@ -19,8 +19,8 @@ class ChallengeHomeView extends StatefulWidget {
 }
 
 class _ChallengeHomeViewState extends State<ChallengeHomeView> {
-  List<Post> relatedPosts;
-  ScrollController scrollViewController;
+  List<Post>? relatedPosts;
+  late ScrollController scrollViewController;
 
   @override
   void initState() {
@@ -45,12 +45,12 @@ class _ChallengeHomeViewState extends State<ChallengeHomeView> {
             backgroundColor: AppColors.whiteColor,
             leading: InkWell(
               onTap: () => Navigator.of(context).pop(),
-              child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.mainTextColor),
+              child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.textColor),
             ),
             title: Text("Шагналт тэмцээн",
                 style: GoogleFonts.kurale(
                   fontSize: 18,
-                  color: AppColors.mainTextColor,
+                  color: AppColors.textColor,
                   fontWeight: FontWeight.w500,
                 )),
           ),
@@ -112,10 +112,10 @@ class _ChallengeHomeViewState extends State<ChallengeHomeView> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.info_outline, size: 20, color: AppColors.mainTextColor),
+                    Icon(Icons.info_outline, size: 20, color: AppColors.textColor),
                     SizedBox(width: 5),
                     Text("Тэмцээнд оролцож дээрх шагналыг хожоорой.",
-                        style: GoogleFonts.kurale(color: AppColors.mainTextColor, fontSize: 16, fontWeight: FontWeight.w500)),
+                        style: GoogleFonts.kurale(color: AppColors.textColor, fontSize: 16, fontWeight: FontWeight.w500)),
                   ],
                 ),
               ],
@@ -124,7 +124,7 @@ class _ChallengeHomeViewState extends State<ChallengeHomeView> {
     );
   }
 
-  _stepperInstruction(List<WeeklyChallenge> listChallenge, List<Post> listUserPosts) {
+  _stepperInstruction(List<WeeklyChallenge> listChallenge, List<Post>? listUserPosts) {
     return Column(
       children: [
         for (int index = 0; index < listChallenge.length; index++)
@@ -174,7 +174,7 @@ class _ChallengeHomeViewState extends State<ChallengeHomeView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('${listChallenge[index].title}',
-                            style: GoogleFonts.kurale(color: AppColors.mainTextColor, fontSize: 16, fontWeight: FontWeight.w500)),
+                            style: GoogleFonts.kurale(color: AppColors.textColor, fontSize: 16, fontWeight: FontWeight.w500)),
                         SizedBox(height: 10),
                         if (listChallenge[index].type == "sendChallenge" && listUserPosts == null)
                           Row(
@@ -189,11 +189,11 @@ class _ChallengeHomeViewState extends State<ChallengeHomeView> {
                             children: [
                               Expanded(
                                   child: WeeklyProgressBar(
-                                      total: app.challengeSubmit.total, done: app.challengeSubmit.done, width: 230)),
-                              Text("${app.challengeSubmit.done}/${app.challengeSubmit.total}",
+                                      total: app.challengeSubmit!.total, done: app.challengeSubmit!.done, width: 230)),
+                              Text("${app.challengeSubmit!.done}/${app.challengeSubmit!.total}",
                                   style: GoogleFonts.kurale(
                                     fontSize: 13,
-                                    color: AppColors.mainTextColor,
+                                    color: AppColors.textColor,
                                     letterSpacing: 1,
                                   )),
                               SizedBox(width: 20),

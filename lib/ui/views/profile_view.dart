@@ -15,14 +15,14 @@ import 'package:sillyhouseorg/ui/widgets/gallery_post_widget.dart';
 import 'package:sillyhouseorg/ui/widgets/profile_picture.dart';
 
 class ProfileView extends StatefulWidget {
-  ProfileView({Key key}) : super(key: key);
+  ProfileView({Key? key}) : super(key: key);
 
   @override
   _ProfileViewState createState() => _ProfileViewState();
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  ScrollController scrollViewController;
+  ScrollController? scrollViewController;
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   void dispose() {
     super.dispose();
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
   }
 
   @override
@@ -60,7 +60,7 @@ class _ProfileViewState extends State<ProfileView> {
                               scrollDirection: Axis.vertical,
                               crossAxisSpacing: 6,
                               mainAxisSpacing: 8,
-                              children: model.listUserAllPosts.map((Post post) {
+                              children: model.listUserAllPosts!.map((Post post) {
                                 return GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -96,7 +96,7 @@ class _ProfileViewState extends State<ProfileView> {
                   child: ProfilePicture(url: loggedUser.profile_pic),
                 ),
                 SizedBox(width: 15),
-                Text('Сайн уу, ' + loggedUser.name, style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
+                Text('Сайн уу, ' + loggedUser.name!, style: GoogleFonts.kurale(fontSize: 18, color: Colors.black)),
               ],
             ),
             GestureDetector(

@@ -7,14 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sillyhouseorg/ui/widgets/my_app_bar.dart';
 
 class NotificationView extends StatefulWidget {
-  NotificationView({Key key}) : super(key: key);
+  NotificationView({Key? key}) : super(key: key);
 
   @override
   _NotificationViewState createState() => _NotificationViewState();
 }
 
 class _NotificationViewState extends State<NotificationView> {
-  _NotificationViewState({Key key});
+  _NotificationViewState({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _NotificationViewState extends State<NotificationView> {
         appBar: myAppBar(
           leadingFunction: () => Navigator.of(context).pop(),
           title: "Мэдэгдэл",
-        ),
+        ) as PreferredSizeWidget?,
         backgroundColor: Colors.white,
         body: SafeArea(
           child: model.state == ViewState.Busy

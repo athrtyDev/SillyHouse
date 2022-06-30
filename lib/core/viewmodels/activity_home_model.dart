@@ -6,18 +6,18 @@ import 'package:sillyhouseorg/global/global.dart';
 import 'package:sillyhouseorg/locator.dart';
 
 class ActivityHomeModel extends BaseModel {
-  final Api _api = locator<Api>();
-  Map<String, List<Activity>> mapActivity;
+  final Api? _api = locator<Api>();
+  late Map<String?, List<Activity>?> mapActivity;
 
-  void getActivityList(String activityType) async {
+  void getActivityList(String? activityType) async {
     setState(ViewState.Busy);
-    if (app.listAllActivity == null) app.listAllActivity = await _api.getAllActivity();
-    mapActivity = new Map<String, List<Activity>>();
-    for (Activity activity in app.listAllActivity) {
-      if (!activity.isActive) continue;
-      List<Activity> newList = [];
+    if (app.listAllActivity == null) app.listAllActivity = await _api!.getAllActivity();
+    mapActivity = new Map<String?, List<Activity>?>();
+    for (Activity activity in app.listAllActivity!) {
+      if (!activity.isActive!) continue;
+      List<Activity>? newList = [];
       if (mapActivity.containsKey(activity.activityType)) newList = mapActivity[activity.activityType];
-      newList.add(activity);
+      newList!.add(activity);
       mapActivity[activity.activityType] = newList;
     }
 

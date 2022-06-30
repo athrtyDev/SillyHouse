@@ -4,20 +4,20 @@ import 'package:sillyhouseorg/core/enums/view_state.dart';
 import 'package:video_player/video_player.dart';
 
 class MyMedia extends StatefulWidget {
-  final String url;
-  final String type;
-  final Function onDispose;
+  final String? url;
+  final String? type;
+  final Function? onDispose;
 
-  const MyMedia({@required this.url, @required this.type, this.onDispose});
+  const MyMedia({required this.url, required this.type, this.onDispose});
 
   @override
   State<MyMedia> createState() => _MyMediaState();
 }
 
 class _MyMediaState extends State<MyMedia> {
-  VideoPlayerController videoController;
-  Future<void> initializeVideoPlayer;
-  ViewState state;
+  VideoPlayerController? videoController;
+  Future<void>? initializeVideoPlayer;
+  ViewState? state;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _MyMediaState extends State<MyMedia> {
   }
 
   _disposeVideo() {
-    if (videoController != null) videoController.dispose();
+    if (videoController != null) videoController!.dispose();
   }
 
   @override
@@ -40,13 +40,13 @@ class _MyMediaState extends State<MyMedia> {
     return state == ViewState.Busy
         ? Container(height: 300, child: Center(child: CircularProgressIndicator()))
         : Container(
-            height: (widget.type == 'video' && videoController.value.size != null)
-                ? ((MediaQuery.of(context).size.width * videoController.value.size.height) / videoController.value.size.width)
+            height: (widget.type == 'video' && videoController!.value.size != null)
+                ? ((MediaQuery.of(context).size.width * videoController!.value.size.height) / videoController!.value.size.width)
                 : null,
             width: widget.type == 'video' ? MediaQuery.of(context).size.width : null,
             child: widget.type == 'image'
                 ? CachedNetworkImage(
-                    imageUrl: widget.url,
+                    imageUrl: widget.url!,
                     fit: BoxFit.cover,
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   )
@@ -55,17 +55,17 @@ class _MyMediaState extends State<MyMedia> {
                 GestureDetector(
                     onTap: () {
                       setState(() {
-                        if (videoController.value.isPlaying)
-                          videoController.pause();
+                        if (videoController!.value.isPlaying)
+                          videoController!.pause();
                         else
-                          videoController.play();
+                          videoController!.play();
                       });
                     },
                     child: Stack(
                       children: [
-                        VideoPlayer(videoController),
+                        VideoPlayer(videoController!),
                         // Play button
-                        videoController == null || videoController.value.isPlaying
+                        videoController == null || videoController!.value.isPlaying
                             ? Text('')
                             : Center(
                                 child: Icon(
@@ -86,11 +86,11 @@ class _MyMediaState extends State<MyMedia> {
       });
       // initialize video
       if (widget.type == 'video') {
-        videoController = VideoPlayerController.network(widget.url);
-        await videoController.initialize();
-        videoController.setLooping(false);
-        videoController.setVolume(4.0);
-        videoController.play();
+        videoController = VideoPlayerController.network(widget.url!);
+        await videoController!.initialize();
+        videoController!.setLooping(false);
+        videoController!.setVolume(4.0);
+        videoController!.play();
       }
       setState(() {
         state = ViewState.Idle;

@@ -24,7 +24,7 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _emailInput = TextEditingController();
   final ScrollController _controller = ScrollController();
   String gender = "";
-  File profileFile;
+  File? profileFile;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _RegisterViewState extends State<RegisterView> {
             setState(() {});
           },
           child: Scaffold(
-              appBar: myAppBar(title: "Бүртгүүлэх", leadingFunction: () => Navigator.pop(context)),
+              appBar: myAppBar(title: "Бүртгүүлэх", leadingFunction: () => Navigator.pop(context)) as PreferredSizeWidget?,
               backgroundColor: Colors.white,
               body: Stack(
                 fit: StackFit.expand,
@@ -221,7 +221,7 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   _addPicture() async {
-    PickedMedia media = await Navigator.push(context, MaterialPageRoute(builder: (context) => TakeProfilePicturePage()));
+    PickedMedia? media = await Navigator.push(context, MaterialPageRoute(builder: (context) => TakeProfilePicturePage()));
     if (media != null)
       setState(() {
         profileFile = media.storageFile;

@@ -1,42 +1,42 @@
 import 'package:sillyhouseorg/core/classes/media.dart';
 
 class Activity {
-  String docId;
-  String id;
-  String activityType; // diy, discover, dance
-  bool autoPlay;
-  String coverImageUrl; // get form storage
-  String difficulty; // 0-easy; 1-medium; 2-hard
-  String instruction;
-  bool isFeatured; // true if an activity featured on home screen
-  bool isActive;
-  String mediaUrlAll; // combined all media urls
-  String mediaUrlAllMeta; // combined all media urls' info
-  String name;
-  int skill; // biyluuleed awah onoo. Herew 0 baiwal app deer haruulahgui
-  int version; // cache version. Updates cache when version mismatches
+  String? docId;
+  String? id;
+  String? activityType; // diy, discover, dance
+  bool? autoPlay;
+  String? coverImageUrl; // get form storage
+  String? difficulty; // 0-easy; 1-medium; 2-hard
+  String? instruction;
+  bool? isFeatured; // true if an activity featured on home screen
+  bool? isActive;
+  String? mediaUrlAll; // combined all media urls
+  String? mediaUrlAllMeta; // combined all media urls' info
+  String? name;
+  int? skill; // biyluuleed awah onoo. Herew 0 baiwal app deer haruulahgui
+  int? version; // cache version. Updates cache when version mismatches
   // tuslah
-  int age;
-  int postCount; // posts from other kids
-  List<Media> listMedia;
-  String cachePathCoverImg;
+  int? age;
+  int? postCount; // posts from other kids
+  List<Media>? listMedia;
+  String? cachePathCoverImg;
   //var rng = new Random();
 
   Activity copyWith({
-    String docId,
-    String id,
-    String activityType,
-    bool autoPlay,
-    String coverImageUrl,
-    String difficulty,
-    String instruction,
-    bool isFeatured,
-    bool isActive,
-    String mediaUrlAll,
-    String mediaUrlAllMeta,
-    String name,
-    int skill,
-    int version,
+    String? docId,
+    String? id,
+    String? activityType,
+    bool? autoPlay,
+    String? coverImageUrl,
+    String? difficulty,
+    String? instruction,
+    bool? isFeatured,
+    bool? isActive,
+    String? mediaUrlAll,
+    String? mediaUrlAllMeta,
+    String? name,
+    int? skill,
+    int? version,
   }) {
     return Activity(
       docId: docId ?? this.docId,
@@ -112,16 +112,16 @@ class Activity {
     return data;
   }
 
-  List<Media> getListMedia() {
+  List<Media>? getListMedia() {
     if (listMedia == null) {
       if (mediaUrlAll == null || mediaUrlAll == "") return [];
       // aa.mp4;bb.mp4  => List[aa.mp4, bb.mp4]
-      List<String> listUrlString = mediaUrlAll.split(";");
-      List<String> listUrlTypeString = mediaUrlAllMeta.split(";");
+      List<String> listUrlString = mediaUrlAll!.split(";");
+      List<String> listUrlTypeString = mediaUrlAllMeta!.split(";");
       listMedia = [];
       for (int index = 0; index < listUrlString.length; index++) {
         Media media = new Media(url: listUrlString[index], type: listUrlTypeString[index]);
-        listMedia.add(media);
+        listMedia!.add(media);
       }
     }
     return listMedia;

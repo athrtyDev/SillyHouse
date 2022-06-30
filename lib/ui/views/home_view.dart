@@ -17,16 +17,16 @@ import 'package:sillyhouseorg/ui/widgets/profile_picture.dart';
 import 'package:sillyhouseorg/ui/widgets/weekly_progress_bar.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({Key key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
 
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  ScrollController scrollViewController;
-  ScrollController postViewController;
-  ScrollController scrollBestPostController;
+  ScrollController? scrollViewController;
+  late ScrollController postViewController;
+  late ScrollController scrollBestPostController;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   void dispose() {
     super.dispose();
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
     postViewController.dispose();
     scrollBestPostController.dispose();
   }
@@ -62,10 +62,10 @@ class _HomeViewState extends State<HomeView> {
                         Column(
                           children: [
                             SizedBox(height: 20),
-                            _weeklyChallenge(app.interfaceDynamic),
+                            _weeklyChallenge(app.interfaceDynamic!),
                             SizedBox(height: 20),
                             //TopPostPanel(),
-                            _activityTypes(app.activityTypes),
+                            _activityTypes(app.activityTypes!),
                             SizedBox(height: 20),
                             _challenges(model),
                           ],
@@ -91,7 +91,7 @@ class _HomeViewState extends State<HomeView> {
               child: ProfilePicture(
                 url: Provider.of<User>(context, listen: true).profile_pic,
                 onTap: () {
-                  String userType = Provider.of<User>(context, listen: true).type;
+                  String? userType = Provider.of<User>(context, listen: false).type;
                   print('user type: ' + userType.toString());
                   if (userType != null && userType == "admin") Navigator.pushNamed(context, '/admin');
                 },
@@ -101,7 +101,7 @@ class _HomeViewState extends State<HomeView> {
             Text('Сайн уу, ${Provider.of<User>(context, listen: true).name}!',
                 style: GoogleFonts.kurale(
                   fontSize: 18,
-                  color: AppColors.mainTextColor,
+                  color: AppColors.textColor,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1,
                 )),
@@ -159,7 +159,7 @@ class _HomeViewState extends State<HomeView> {
                   ? Image.asset("lib/ui/images/home_header2.png")
                   : CachedNetworkImage(
                       fit: BoxFit.cover,
-                      imageUrl: dynamic.homePosterUrl,
+                      imageUrl: dynamic.homePosterUrl!,
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
             ),
@@ -182,21 +182,21 @@ class _HomeViewState extends State<HomeView> {
                           Text('Илгээсэн даалгавар',
                               style: GoogleFonts.kurale(
                                 fontSize: 13,
-                                color: AppColors.mainTextColor,
+                                color: AppColors.textColor,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
                               )),
-                          Text("${app.challengeSubmit.done}/${app.challengeSubmit.total}",
+                          Text("${app.challengeSubmit!.done}/${app.challengeSubmit!.total}",
                               style: GoogleFonts.kurale(
                                 fontSize: 13,
-                                color: AppColors.mainTextColor,
+                                color: AppColors.textColor,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 1,
                               )),
                         ],
                       ),
                       SizedBox(height: 5),
-                      WeeklyProgressBar(total: app.challengeSubmit.total, done: app.challengeSubmit.done, width: _width),
+                      WeeklyProgressBar(total: app.challengeSubmit!.total, done: app.challengeSubmit!.done, width: _width),
                     ],
                   ),
                 ),
@@ -217,7 +217,7 @@ class _HomeViewState extends State<HomeView> {
             Text('Сонгоод, туршаад үзээрэй',
                 style: GoogleFonts.kurale(
                   fontSize: 18,
-                  color: AppColors.mainTextColor,
+                  color: AppColors.textColor,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1,
                 )),
@@ -241,7 +241,7 @@ class _HomeViewState extends State<HomeView> {
                   });
                 },
                 image: CachedNetworkImage(
-                  imageUrl: type.image,
+                  imageUrl: type.image!,
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
                 name: type.name,
@@ -261,7 +261,7 @@ class _HomeViewState extends State<HomeView> {
           Text('Шилдэг даалгаврууд',
               style: GoogleFonts.kurale(
                 fontSize: 18,
-                color: AppColors.mainTextColor,
+                color: AppColors.textColor,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1,
               )),
@@ -273,7 +273,7 @@ class _HomeViewState extends State<HomeView> {
             scrollDirection: Axis.vertical,
             mainAxisSpacing: 5.0,
             crossAxisSpacing: 5.0,
-            children: model.listFeaturedActivity.map((Activity activity) {
+            children: model.listFeaturedActivity!.map((Activity activity) {
               return ActivityTile(
                 activity: activity,
                 color: AppColors.backgroundColor,

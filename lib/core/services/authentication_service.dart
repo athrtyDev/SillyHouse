@@ -6,13 +6,13 @@ import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/locator.dart';
 
 class AuthenticationService {
-  StreamController<User> userController = StreamController<User>();
+  StreamController<User?> userController = StreamController<User?>();
 
   Future<void> registerUser(User user) async {
     // Profile picture
     if (user.profileFile != null) {
       final Api _api = locator<Api>();
-      String profilePicUrl = await _api.uploadFile(user.profileFile, "user/profile_pic/" + user.id, "image");
+      String profilePicUrl = await _api.uploadFile(user.profileFile!, "user/profile_pic/" + user.id!, "image");
       user.profile_pic = profilePicUrl;
     }
     // User data
@@ -20,7 +20,7 @@ class AuthenticationService {
     await addUserToStreamAndCache(user);
   }
 
-  Future<User> fetchUser(String name, String password) async {
+  Future<User?> fetchUser(String name, String password) async {
     QuerySnapshot customerSnapshot = await FirebaseFirestore.instance
         .collection('User')
         .where('name', isEqualTo: name)
@@ -30,15 +30,15 @@ class AuthenticationService {
     if (customerSnapshot.docs.isEmpty) {
       return null;
     } else {
-      User user = User.fromJson(customerSnapshot.docs[0].data());
+      User user = User.fromJson(customerSnapshot.docs[0].data() as Map<String, dynamic>);
       addUserToStreamAndCache(user);
       return user;
     }
   }
 
-  Future<User> getUserFromCache() async {
+  Future<User?> getUserFromCache() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('username');
+    String? username = prefs.getString('username');
     if (username != null) {
       User user = new User(
           id: prefs.getString('id'),
@@ -55,16 +55,17 @@ class AuthenticationService {
       return null;
   }
 
-  void addUserToStreamAndCache(User user) async {
+  addUserToStreamAndCache(User user) async {
     userController.add(user);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('id', user.id);
-    prefs.setString('username', user.name);
-    prefs.setInt('age', user.age);
+    prefs.setString('id', user.id!);
+    prefs.setString('username', user.name!);
+    prefs.setInt('age', user.age!);
     prefs.setString('email', user.email ?? "");
     prefs.setString('registeredDate', user.registeredDate ?? "");
     prefs.setString('profile_pic', user.profile_pic ?? "");
     prefs.setString('gender', user.gender ?? "");
+    prefs.setString('type', user.type ?? "");
   }
 
   void removeUserFromStreamAndCache() async {

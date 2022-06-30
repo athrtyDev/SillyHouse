@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/ui/globals/color.dart';
 
 class ProfilePicture extends StatelessWidget {
-  final File file;
-  final String url;
-  final Function onTap;
+  final File? file;
+  final String? url;
+  final Function? onTap;
 
   ProfilePicture({this.file, this.url, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -32,10 +32,10 @@ class ProfilePicture extends StatelessWidget {
                 : ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(40)),
                     child: file != null
-                        ? Image.file(file, fit: BoxFit.cover)
+                        ? Image.file(file!, fit: BoxFit.cover)
                         : CachedNetworkImage(
                             fit: BoxFit.cover,
-                            imageUrl: url,
+                            imageUrl: url!,
                             errorWidget: (context, url, error) => Icon(Icons.error_outline),
                           ),
                   ),

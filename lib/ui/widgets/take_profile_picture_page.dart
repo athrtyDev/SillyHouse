@@ -15,9 +15,9 @@ class TakeProfilePicturePage extends StatefulWidget {
 
 class _TakeProfilePicturePageState extends State<TakeProfilePicturePage> with WidgetsBindingObserver {
   final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-  CameraController _cameraController;
-  Future<void> _initializeCameraControllerFuture;
-  String whichCamera;
+  late CameraController _cameraController;
+  Future<void>? _initializeCameraControllerFuture;
+  String? whichCamera;
   var cameras;
 
   @override
@@ -101,7 +101,7 @@ class _TakeProfilePicturePageState extends State<TakeProfilePicturePage> with Wi
                   onTap: () => Navigator.of(context).pop(),
                   child: Container(
                     padding: EdgeInsets.all(10),
-                    child: Icon(Icons.close_rounded, color: AppColors.mainTextColor),
+                    child: Icon(Icons.close_rounded, color: AppColors.textColor),
                   ),
                 ))
           ],

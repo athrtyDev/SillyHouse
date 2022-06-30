@@ -6,25 +6,25 @@ import 'package:sillyhouseorg/core/classes/challenge_submit.dart';
 import 'package:sillyhouseorg/core/services/authentication_service.dart';
 import 'package:sillyhouseorg/locator.dart';
 
-Globals app;
-SharedPreferences storage;
+late Globals app;
+SharedPreferences? storage;
 
 class Globals {
-  static Globals _instance;
+  static Globals? _instance;
 
   factory Globals() {
     _instance ??= Globals._internal();
-    return _instance;
+    return _instance!;
   }
 
   Globals._internal() {
     _init();
   }
 
-  List<ActivityType> activityTypes;
-  InterfaceDynamic interfaceDynamic;
-  List<Activity> listAllActivity;
-  ChallengeSubmit challengeSubmit;
+  List<ActivityType>? activityTypes;
+  InterfaceDynamic? interfaceDynamic;
+  List<Activity>? listAllActivity;
+  ChallengeSubmit? challengeSubmit;
 
   void _init() async {
     try {} catch (error, stacktrace) {

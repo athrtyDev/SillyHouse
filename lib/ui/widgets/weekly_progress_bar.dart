@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/ui/globals/color.dart';
 
 class WeeklyProgressBar extends StatelessWidget {
-  final int total;
-  final int done;
+  final int? total;
+  final int? done;
   final double width;
   final double height;
 
-  const WeeklyProgressBar({@required this.total, @required this.done, @required this.width, this.height = 15});
+  const WeeklyProgressBar({required this.total, required this.done, required this.width, this.height = 15});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class WeeklyProgressBar extends StatelessWidget {
         ),
         Container(
           height: height,
-          width: width * done / total,
+          width: width * done! / total!,
           decoration: BoxDecoration(
             color: AppColors.baseColor,
             borderRadius: BorderRadius.all(Radius.circular(15)),

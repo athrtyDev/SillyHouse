@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User>(
+    return StreamProvider<User?>(
         create: (_) => locator<AuthenticationService>().userController.stream,
         initialData: User.initial(),
         child: MaterialApp(

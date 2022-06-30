@@ -13,16 +13,16 @@ import 'package:sillyhouseorg/ui/widgets/gallery_post_widget.dart';
 import 'package:sillyhouseorg/ui/widgets/weekly_progress_bar.dart';
 
 class ChooseChallengePostView extends StatefulWidget {
-  final List<Post> listUserPost;
+  final List<Post>? listUserPost;
 
-  ChooseChallengePostView({@required this.listUserPost});
+  ChooseChallengePostView({required this.listUserPost});
 
   @override
   _ChooseChallengePostViewState createState() => _ChooseChallengePostViewState();
 }
 
 class _ChooseChallengePostViewState extends State<ChooseChallengePostView> {
-  ScrollController scrollViewController;
+  ScrollController? scrollViewController;
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _ChooseChallengePostViewState extends State<ChooseChallengePostView> {
 
   @override
   void dispose() {
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
     super.dispose();
   }
 
@@ -47,12 +47,12 @@ class _ChooseChallengePostViewState extends State<ChooseChallengePostView> {
             backgroundColor: AppColors.whiteColor,
             leading: InkWell(
               onTap: () => Navigator.of(context).pop(),
-              child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.mainTextColor),
+              child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.textColor),
             ),
             title: Text("Бүтээл сонгох",
                 style: GoogleFonts.kurale(
                   fontSize: 18,
-                  color: AppColors.mainTextColor,
+                  color: AppColors.textColor,
                   fontWeight: FontWeight.w500,
                 )),
           ),
@@ -70,14 +70,14 @@ class _ChooseChallengePostViewState extends State<ChooseChallengePostView> {
                       Text('Илгээсэн даалгавар:',
                           style: GoogleFonts.kurale(
                             fontSize: 15,
-                            color: AppColors.mainTextColor,
+                            color: AppColors.textColor,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 1,
                           )),
-                      Text("${model.listSelectedPost.length}/${app.challengeSubmit.total}",
+                      Text("${model.listSelectedPost.length}/${app.challengeSubmit!.total}",
                           style: GoogleFonts.kurale(
                             fontSize: 15,
-                            color: AppColors.mainTextColor,
+                            color: AppColors.textColor,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1,
                           )),
@@ -85,7 +85,7 @@ class _ChooseChallengePostViewState extends State<ChooseChallengePostView> {
                   ),
                   SizedBox(height: 5),
                   WeeklyProgressBar(
-                      total: app.challengeSubmit.total,
+                      total: app.challengeSubmit!.total,
                       done: model.listSelectedPost.length,
                       width: MediaQuery.of(context).size.width - 40,
                       height: 15),
@@ -105,12 +105,12 @@ class _ChooseChallengePostViewState extends State<ChooseChallengePostView> {
                           scrollDirection: Axis.vertical,
                           crossAxisSpacing: 6,
                           mainAxisSpacing: 8,
-                          children: widget.listUserPost.map((Post post) {
+                          children: widget.listUserPost!.map((Post post) {
                             return GestureDetector(
                                 onTap: () {
-                                  if (!post.isSelected && model.listSelectedPost.length >= app.challengeSubmit.total)
+                                  if (!post.isSelected && model.listSelectedPost.length >= app.challengeSubmit!.total!)
                                     Flushbar(
-                                      message: 'Нийт ${app.challengeSubmit.total} бүтээл илгээнэ.',
+                                      message: 'Нийт ${app.challengeSubmit!.total} бүтээл илгээнэ.',
                                       padding: EdgeInsets.all(25),
                                       backgroundColor: Color(0xff36c1c8),
                                       duration: Duration(seconds: 3),

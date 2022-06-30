@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final TextInputType keyboardType;
-  final IconData icon;
-  final String hintText;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final IconData? icon;
+  final String? hintText;
   final bool isPassword;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final Color borderColor;
-  final Function onTap;
+  final Function? onTap;
 
   MyTextField(
       {this.controller,
@@ -38,7 +38,7 @@ class _MyTextFieldState extends State<MyTextField> {
         keyboardType: widget.keyboardType,
         style: GoogleFonts.kurale(color: Colors.black),
         onTap: () {
-          if (widget.onTap != null) widget.onTap();
+          if (widget.onTap != null) widget.onTap!();
           setState(() {});
         },
         obscureText: widget.isPassword,
@@ -50,9 +50,9 @@ class _MyTextFieldState extends State<MyTextField> {
         decoration: InputDecoration(
             prefixIcon: Icon(
               widget.icon,
-              color: widget.controller.text != null && widget.controller.text != "" ? Colors.black38 : Colors.grey[300],
+              color: widget.controller!.text != null && widget.controller!.text != "" ? Colors.black38 : Colors.grey[300],
             ),
-            suffixIcon: widget.controller.text != null && widget.controller.text != ""
+            suffixIcon: widget.controller!.text != null && widget.controller!.text != ""
                 ? Icon(Icons.check_circle_rounded, color: Colors.green)
                 : null,
             border: border,

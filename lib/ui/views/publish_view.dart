@@ -13,31 +13,31 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 class PublishView extends StatefulWidget {
-  final Post post;
-  PublishView({@required this.post});
+  final Post? post;
+  PublishView({required this.post});
 
   @override
   _PublishViewState createState() => _PublishViewState();
 }
 
 class _PublishViewState extends State<PublishView> with SingleTickerProviderStateMixin {
-  VideoPlayerController videoController;
-  Future<void> initializeVideoPlayer;
+  VideoPlayerController? videoController;
+  Future<void>? initializeVideoPlayer;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.post.pickedMedia == null)
+    if (widget.post!.pickedMedia == null)
       _showCamera();
     else
-      _updateMedia(widget.post.pickedMedia);
+      _updateMedia(widget.post!.pickedMedia);
   }
 
   @override
   void dispose() {
     if (videoController != null) {
-      videoController.dispose();
+      videoController!.dispose();
     }
     //pickedMedia = null;
     super.dispose();
@@ -55,14 +55,14 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                   // Prevent back navigation when uploading
                   if (model.state == ViewState.Idle) {
                     // Pause video before navigation
-                    if (videoController != null && videoController.value.isPlaying) {
-                      videoController.pause();
+                    if (videoController != null && videoController!.value.isPlaying) {
+                      videoController!.pause();
                     }
-                    if (widget.post.pickedMedia != null && widget.post.pickedMedia.storageFile != null) {
-                      await widget.post.pickedMedia.storageFile.delete();
+                    if (widget.post!.pickedMedia != null && widget.post!.pickedMedia!.storageFile != null) {
+                      await widget.post!.pickedMedia!.storageFile!.delete();
                     }
-                    if (widget.post.pickedMedia != null && widget.post.pickedMedia.path != null) {
-                      await File(widget.post.pickedMedia.path).delete();
+                    if (widget.post!.pickedMedia != null && widget.post!.pickedMedia!.path != null) {
+                      await File(widget.post!.pickedMedia!.path!).delete();
                     }
                     return new Future.value(true);
                   } else {
@@ -71,8 +71,8 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                 },
                 child: Scaffold(
                   backgroundColor: Colors.white,
-                  appBar: myAppBar(title: "Бүтээл оруулах", leadingFunction: () => Navigator.pop(context)),
-                  body: widget.post.pickedMedia == null
+                  appBar: myAppBar(title: "Бүтээл оруулах", leadingFunction: () => Navigator.pop(context)) as PreferredSizeWidget?,
+                  body: widget.post!.pickedMedia == null
                       ? Center(
                           child: GestureDetector(
                           onTap: () => _showCamera(),
@@ -93,30 +93,30 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                               //crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Container(
-                                    height: (widget.post.pickedMedia.type == 'video' &&
+                                    height: (widget.post!.pickedMedia!.type == 'video' &&
                                             videoController != null &&
-                                            videoController.value.size != null)
-                                        ? ((MediaQuery.of(context).size.width * videoController.value.size.height) /
-                                            videoController.value.size.width)
+                                            videoController!.value.size != null)
+                                        ? ((MediaQuery.of(context).size.width * videoController!.value.size.height) /
+                                            videoController!.value.size.width)
                                         : null,
-                                    width: widget.post.pickedMedia.type == 'video' ? MediaQuery.of(context).size.width : null,
-                                    child: widget.post.pickedMedia.type == 'video' && videoController != null
+                                    width: widget.post!.pickedMedia!.type == 'video' ? MediaQuery.of(context).size.width : null,
+                                    child: widget.post!.pickedMedia!.type == 'video' && videoController != null
                                         ?
                                         // Video
                                         GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                if (videoController.value.isPlaying)
-                                                  videoController.pause();
+                                                if (videoController!.value.isPlaying)
+                                                  videoController!.pause();
                                                 else
-                                                  videoController.play();
+                                                  videoController!.play();
                                               });
                                             },
                                             child: Stack(
                                               children: [
-                                                VideoPlayer(videoController),
+                                                VideoPlayer(videoController!),
                                                 // Play button
-                                                videoController == null || videoController.value.isPlaying
+                                                videoController == null || videoController!.value.isPlaying
                                                     ? Text('')
                                                     : Center(
                                                         child: Icon(
@@ -129,9 +129,9 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                                           )
                                         :
                                         // Image
-                                        widget.post.pickedMedia.storageFile == null
-                                            ? Image.file(File(widget.post.pickedMedia.path), fit: BoxFit.fitWidth)
-                                            : Image.file(File(widget.post.pickedMedia.storageFile.path), fit: BoxFit.fitWidth)),
+                                        widget.post!.pickedMedia!.storageFile == null
+                                            ? Image.file(File(widget.post!.pickedMedia!.path!), fit: BoxFit.fitWidth)
+                                            : Image.file(File(widget.post!.pickedMedia!.storageFile!.path), fit: BoxFit.fitWidth)),
                               ],
                             )),
                           ),
@@ -164,7 +164,7 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                                               //   await File(widget.post.pickedMedia.path).delete();
                                               // }
                                               try {
-                                                widget.post.pickedMedia.storageFile.delete();
+                                                widget.post!.pickedMedia!.storageFile!.delete();
                                               } on Exception catch (e) {
                                                 print('error deleting file: ' + e.toString());
                                               }
@@ -176,12 +176,12 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
                                             child: Icon(Icons.check, size: 60, color: Colors.green),
                                             onTap: () {
                                               try {
-                                                widget.post.uploadMediaType = widget.post.pickedMedia.type;
+                                                widget.post!.uploadMediaType = widget.post!.pickedMedia!.type;
                                                 model.uploadFile(
-                                                    widget.post,
-                                                    widget.post.pickedMedia.storageFile == null
-                                                        ? File(widget.post.pickedMedia.path)
-                                                        : File(widget.post.pickedMedia.storageFile.path));
+                                                    widget.post!,
+                                                    widget.post!.pickedMedia!.storageFile == null
+                                                        ? File(widget.post!.pickedMedia!.path!)
+                                                        : File(widget.post!.pickedMedia!.storageFile!.path));
                                               } on Exception catch (e) {
                                                 print('error uploading media: ' + e.toString());
                                               }
@@ -203,28 +203,28 @@ class _PublishViewState extends State<PublishView> with SingleTickerProviderStat
   void _showCamera() async {
     final cameras = await availableCameras();
     if (cameras == null || cameras.length == 0) return;
-    widget.post.cameras = cameras;
-    PickedMedia media =
+    widget.post!.cameras = cameras;
+    PickedMedia? media =
         await Navigator.push(context, MaterialPageRoute(builder: (context) => TakePicturePage(post: widget.post)));
     _updateMedia(media);
   }
 
-  void _updateMedia(PickedMedia media) async {
+  void _updateMedia(PickedMedia? media) async {
     setState(() {
       isLoading = true;
     });
-    widget.post.pickedMedia = media;
+    widget.post!.pickedMedia = media;
 
-    if (widget.post.pickedMedia != null && widget.post.pickedMedia.type == 'video') {
-      if (widget.post.pickedMedia.storageFile == null)
-        videoController = VideoPlayerController.file(File(widget.post.pickedMedia.path));
+    if (widget.post!.pickedMedia != null && widget.post!.pickedMedia!.type == 'video') {
+      if (widget.post!.pickedMedia!.storageFile == null)
+        videoController = VideoPlayerController.file(File(widget.post!.pickedMedia!.path!));
       else
-        videoController = VideoPlayerController.file(File(widget.post.pickedMedia.storageFile.path));
+        videoController = VideoPlayerController.file(File(widget.post!.pickedMedia!.storageFile!.path));
       //initializeVideoPlayer = videoController.initialize();
-      await videoController.initialize();
+      await videoController!.initialize();
       setState(() {
-        videoController.setLooping(true);
-        videoController.setVolume(4.0);
+        videoController!.setLooping(true);
+        videoController!.setVolume(4.0);
       });
     }
     setState(() {

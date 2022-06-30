@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,22 +12,21 @@ import 'package:sillyhouseorg/core/classes/media.dart';
 import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/locator.dart';
 import 'package:sillyhouseorg/ui/globals/color.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sillyhouseorg/ui/widgets/activity_tile.dart';
 
 class AdminView extends StatefulWidget {
-  AdminView({Key key}) : super(key: key);
+  AdminView({Key? key}) : super(key: key);
 
   @override
   _AdminViewState createState() => _AdminViewState();
 }
 
 class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
-  final Api _api = locator<Api>();
-  Map<String, List<Activity>> mapActivity;
-  List<ActivityType> listType;
-  String selectedTab;
-  ScrollController scrollViewController;
+  final Api? _api = locator<Api>();
+  Map<String?, List<Activity>?>? mapActivity;
+  List<ActivityType>? listType;
+  String? selectedTab;
+  ScrollController? scrollViewController;
   bool isUpdating = false;
 
   @override
@@ -39,7 +39,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
   }
 
   @override
@@ -53,12 +53,12 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                 backgroundColor: AppColors.whiteColor,
                 leading: InkWell(
                   onTap: () => Navigator.of(context).pop(),
-                  child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.mainTextColor),
+                  child: Icon(Icons.arrow_back_ios_rounded, color: AppColors.textColor),
                 ),
                 title: Text('Admin panel',
                     style: GoogleFonts.kurale(
                       fontSize: 18,
-                      color: AppColors.mainTextColor,
+                      color: AppColors.textColor,
                       fontWeight: FontWeight.w500,
                     )),
               ),
@@ -79,7 +79,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                               scrollDirection: Axis.vertical,
                               crossAxisSpacing: 5,
                               mainAxisSpacing: 5,
-                              children: mapActivity[selectedTab].map((Activity activity) {
+                              children: mapActivity![selectedTab]!.map((Activity activity) {
                                 return ActivityTile(
                                   activity: activity,
                                   color: AppColors.whiteColor,
@@ -112,7 +112,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        for (String key in mapActivity.keys)
+        for (String? key in mapActivity!.keys)
           InkWell(
             onTap: () {
               setState(() {
@@ -124,7 +124,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
               child: Container(
                 padding: EdgeInsets.all(10),
                 color: selectedTab == key ? AppColors.baseColor : AppColors.backgroundColor,
-                child: Text(key),
+                child: Text(key!),
               ),
             ),
           )
@@ -132,68 +132,68 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
     );
   }
 
-  void initAdminData() async {
-    List<Activity> allActivity = await _api.getAllActivity();
-    listType = await _api.getActivityType();
-    mapActivity = new Map<String, List<Activity>>();
+  initAdminData() async {
+    List<Activity> allActivity = await (_api!.getAllActivity() as FutureOr<List<Activity>>);
+    listType = await _api!.getActivityType();
+    mapActivity = new Map<String?, List<Activity>?>();
     for (Activity item in allActivity) {
-      if (item.isActive) {
+      if (item.isActive!) {
         // Group by featured
-        if (item.isFeatured) {
-          List<Activity> listFeatured;
-          if (mapActivity.containsKey('Featured'))
-            listFeatured = mapActivity['Featured'];
+        if (item.isFeatured!) {
+          List<Activity>? listFeatured;
+          if (mapActivity!.containsKey('Featured'))
+            listFeatured = mapActivity!['Featured'];
           else
             listFeatured = [];
-          listFeatured.add(item);
-          mapActivity['Featured'] = listFeatured;
+          listFeatured!.add(item);
+          mapActivity!['Featured'] = listFeatured;
         }
         // Group by activityType
-        List<Activity> list;
-        if (mapActivity.containsKey(item.activityType))
-          list = mapActivity[item.activityType];
+        List<Activity>? list;
+        if (mapActivity!.containsKey(item.activityType))
+          list = mapActivity![item.activityType];
         else
           list = [];
-        list.add(item);
-        mapActivity[item.activityType] = list;
+        list!.add(item);
+        mapActivity![item.activityType] = list;
       } else {
         // Group by disabled
-        List<Activity> listDisabled;
-        if (mapActivity.containsKey('Disabled'))
-          listDisabled = mapActivity['Disabled'];
+        List<Activity>? listDisabled;
+        if (mapActivity!.containsKey('Disabled'))
+          listDisabled = mapActivity!['Disabled'];
         else
           listDisabled = [];
-        listDisabled.add(item);
-        mapActivity['Disabled'] = listDisabled;
+        listDisabled!.add(item);
+        mapActivity!['Disabled'] = listDisabled;
       }
     }
     setState(() {
       mapActivity;
-      selectedTab = mapActivity.keys.first;
+      selectedTab = mapActivity!.keys.first;
     });
   }
 
   showDetail(Activity selectedActivity) {
-    String _type = selectedActivity.activityType;
-    bool _autoPlay = selectedActivity.autoPlay ?? true;
-    String _difficulty = selectedActivity.difficulty;
+    String? _type = selectedActivity.activityType;
+    bool? _autoPlay = selectedActivity.autoPlay ?? true;
+    String? _difficulty = selectedActivity.difficulty;
     TextEditingController _id = TextEditingController();
-    _id.text = selectedActivity.id;
+    _id.text = selectedActivity.id!;
     TextEditingController _instruction = TextEditingController();
-    _instruction.text = selectedActivity.instruction;
-    bool _isActive = selectedActivity.isActive ?? true;
-    bool _isFeatured = selectedActivity.isFeatured ?? false;
+    _instruction.text = selectedActivity.instruction!;
+    bool? _isActive = selectedActivity.isActive ?? true;
+    bool? _isFeatured = selectedActivity.isFeatured ?? false;
     TextEditingController _name = TextEditingController();
-    _name.text = selectedActivity.name;
+    _name.text = selectedActivity.name!;
     TextEditingController _skill = TextEditingController();
     _skill.text = selectedActivity.skill == null ? "" : selectedActivity.skill.toString();
     int _version = (selectedActivity.version ?? 0) + 1;
     //cover
-    String _coverUrl = selectedActivity.coverImageUrl;
-    Media pickedMediaCover;
+    String? _coverUrl = selectedActivity.coverImageUrl;
+    Media? pickedMediaCover;
     //media
     List<Media> listMedia = [];
-    for (var item in selectedActivity.getListMedia()) if (item != null) listMedia.add(item);
+    for (var item in selectedActivity.getListMedia()!) if (item != null) listMedia.add(item);
     listMedia.add(new Media());
     int _carouselIndex = 0;
 
@@ -295,7 +295,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                   Wrap(
                     //crossAxisAlignment: CrossAxisAlignment.,
                     children: [
-                      for (var item in listType)
+                      for (var item in listType!)
                         InkWell(
                           onTap: () {
                             myState(() {
@@ -306,7 +306,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                               padding: EdgeInsets.all(5),
                               margin: EdgeInsets.only(right: 15),
                               color: _type == item.type ? AppColors.baseColor : AppColors.backgroundColor,
-                              child: Text(item.name)),
+                              child: Text(item.name!)),
                         ),
                     ],
                   ),
@@ -359,7 +359,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                       Text("Featured"),
                       Checkbox(
                         value: _isFeatured,
-                        onChanged: (bool value) {
+                        onChanged: (bool? value) {
                           myState(() {
                             _isFeatured = value;
                           });
@@ -369,7 +369,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                       Text("Auto play"),
                       Checkbox(
                         value: _autoPlay,
-                        onChanged: (bool value) {
+                        onChanged: (bool? value) {
                           myState(() {
                             _autoPlay = value;
                           });
@@ -379,7 +379,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                       Text("Active"),
                       Checkbox(
                         value: _isActive,
-                        onChanged: (bool value) {
+                        onChanged: (bool? value) {
                           myState(() {
                             _isActive = value;
                           });
@@ -404,7 +404,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                                         fit: BoxFit.cover,
                                         errorWidget: (context, url, error) => Container(height: 100, color: Colors.amber),
                                       )
-                                    : Image.file(pickedMediaCover.file, fit: BoxFit.cover)),
+                                    : Image.file(pickedMediaCover!.file!, fit: BoxFit.cover)),
                               )
                             : Center(
                                 child: InkWell(
@@ -477,11 +477,11 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                                           // IMAGE
                                           media.url != null
                                               ? CachedNetworkImage(
-                                                  imageUrl: media.url,
+                                                  imageUrl: media.url!,
                                                   fit: BoxFit.fill,
                                                   errorWidget: (context, url, error) => Icon(Icons.error),
                                                 )
-                                              : Image.file(media.file, fit: BoxFit.cover))
+                                              : Image.file(media.file!, fit: BoxFit.cover))
                                       : Container(
                                           height: 300,
                                           color: Colors.grey,
@@ -578,10 +578,10 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                                 coverImageUrl: _coverUrl,
                               );
                               // Cover
-                              String newCoverUrl;
+                              String? newCoverUrl;
                               if (newActivity.coverImageUrl == null && pickedMediaCover != null) {
                                 // New cover upload
-                                newCoverUrl = await _api.uploadFile(pickedMediaCover.file,
+                                newCoverUrl = await _api!.uploadFile(pickedMediaCover!.file!,
                                     "activity_${newActivity.activityType}/${newActivity.id}/cover", "image");
                               }
                               // Instructions
@@ -595,7 +595,7 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                                     mediaUrlAll += "${media.url};";
                                     mediaUrlAllMeta += "${media.type};";
                                   } else if (media.file != null) {
-                                    String newMediaUrl = await _api.uploadFile(media.file,
+                                    String newMediaUrl = await _api!.uploadFile(media.file!,
                                         "activity_${newActivity.activityType}/${newActivity.id}/${index}", media.type);
                                     mediaUrlAll += "${newMediaUrl};";
                                     mediaUrlAllMeta += "${media.type};";
@@ -612,10 +612,10 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
                               newActivity.mediaUrlAll = mediaUrlAll;
                               newActivity.mediaUrlAllMeta = mediaUrlAllMeta;
                               if (selectedActivity.docId == null)
-                                _api.createActivity(newActivity);
+                                _api!.createActivity(newActivity);
                               else {
                                 newActivity.docId = selectedActivity.docId;
-                                _api.updateActivity(newActivity);
+                                _api!.updateActivity(newActivity);
                               }
                               await initAdminData();
                               myState(() {
@@ -649,14 +649,14 @@ class _AdminViewState extends State<AdminView> with TickerProviderStateMixin {
 
   Future<Media> _selectMedia(String type) async {
     final picker = ImagePicker();
-    XFile pickedFile;
+    XFile? pickedFile;
     if (type == 'image')
       pickedFile = await picker.pickImage(source: ImageSource.gallery);
     else
       pickedFile = await picker.pickVideo(source: ImageSource.gallery);
     Media media = new Media();
     media.type = type;
-    media.file = File(pickedFile.path);
+    media.file = File(pickedFile!.path);
     return media;
   }
 }

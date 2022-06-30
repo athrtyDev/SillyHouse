@@ -8,25 +8,25 @@ import 'package:sillyhouseorg/locator.dart';
 import 'package:flutter/material.dart';
 
 class SplashModel extends BaseModel {
-  final Api _api = locator<Api>();
+  final Api? _api = locator<Api>();
 
   void initData(BuildContext context) async {
     final AuthenticationService _authenticationService = locator<AuthenticationService>();
-    User user = await _authenticationService.getUserFromCache();
-    app.interfaceDynamic = await _api.getInterfaceDynamic();
-    app.activityTypes = await _api.getActivityType();
+    User? user = await _authenticationService.getUserFromCache();
+    app.interfaceDynamic = await _api!.getInterfaceDynamic();
+    app.activityTypes = await _api!.getActivityType();
     await checkUpdate(context);
     print('App config loaded!');
     Navigator.pushNamed(context, user != null ? '/mainPage' : '/greeting');
   }
 
-  void checkUpdate(BuildContext context) async {
+  checkUpdate(BuildContext context) async {
     // Check app version to update
     try {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String version = packageInfo.buildNumber;
-      print('app verions: $version vs db app version: ${app.interfaceDynamic.appVersion}');
-      if (app.interfaceDynamic.appVersion != version) Navigator.pushNamed(context, '/update');
+      print('app verions: $version vs db app version: ${app.interfaceDynamic!.appVersion}');
+      if (app.interfaceDynamic!.appVersion != version) Navigator.pushNamed(context, '/update');
     } catch (e) {
       print('error: Failed to check version');
     }

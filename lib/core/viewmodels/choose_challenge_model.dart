@@ -8,16 +8,16 @@ import 'package:sillyhouseorg/global/global.dart';
 import 'package:sillyhouseorg/locator.dart';
 
 class ChooseChallengeModel extends BaseModel {
-  final Api _api = locator<Api>();
-  List<Post> listAllUserPost;
+  final Api? _api = locator<Api>();
+  List<Post>? listAllUserPost;
   List<Post> listSelectedPost = [];
 
-  void initData(List<Post> listAllPost) async {
+  void initData(List<Post>? listAllPost) async {
     setState(ViewState.Busy);
     listAllUserPost = listAllPost;
-    if (app.challengeSubmit.listPost != null && app.challengeSubmit.listPost.isNotEmpty)
-      for (var submit in app.challengeSubmit.listPost) {
-        for (var item in listAllPost) {
+    if (app.challengeSubmit!.listPost != null && app.challengeSubmit!.listPost!.isNotEmpty)
+      for (var submit in app.challengeSubmit!.listPost!) {
+        for (var item in listAllPost!) {
           if (item.postId == submit.postId) {
             item.isSelected = true;
             listSelectedPost.add(item);
@@ -39,18 +39,18 @@ class ChooseChallengeModel extends BaseModel {
     notifyListeners();
   }
 
-  void submitChallenge(User user) async {
+  submitChallenge(User user) async {
     setState(ViewState.Busy);
-    ChallengeSubmit submit = app.challengeSubmit;
+    ChallengeSubmit submit = app.challengeSubmit!;
     submit.userId = user.id;
     submit.userName = user.name;
     submit.listPost = listSelectedPost;
     submit.done = listSelectedPost.length;
     submit.modifiedDate = DateTime.now().toString();
     if (submit.docId == null)
-      await _api.createChallengeSubmit(submit);
+      await _api!.createChallengeSubmit(submit);
     else
-      await _api.updateChallengeSubmit(submit);
+      await _api!.updateChallengeSubmit(submit);
     app.challengeSubmit = submit;
     setState(ViewState.Idle);
     notifyListeners();

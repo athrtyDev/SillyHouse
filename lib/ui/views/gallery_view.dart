@@ -11,14 +11,14 @@ import 'package:flutter/foundation.dart';
 import 'package:sillyhouseorg/ui/widgets/top_post_panel.dart';
 
 class GalleryView extends StatefulWidget {
-  GalleryView({Key key}) : super(key: key);
+  GalleryView({Key? key}) : super(key: key);
 
   @override
   _GalleryViewState createState() => _GalleryViewState();
 }
 
 class _GalleryViewState extends State<GalleryView> {
-  ScrollController scrollViewController;
+  ScrollController? scrollViewController;
   bool isLoading = false;
 
   @override
@@ -34,7 +34,7 @@ class _GalleryViewState extends State<GalleryView> {
   @override
   void dispose() {
     super.dispose();
-    if (scrollViewController != null) scrollViewController.dispose();
+    if (scrollViewController != null) scrollViewController!.dispose();
   }
 
   @override
@@ -55,7 +55,7 @@ class _GalleryViewState extends State<GalleryView> {
                         children: [
                           TopPostPanel(),
                           SizedBox(height: 15),
-                          _allPosts(model.listPosts),
+                          _allPosts(model.listPosts!),
                         ],
                       ),
                     ),
@@ -72,12 +72,12 @@ class _GalleryViewState extends State<GalleryView> {
         children: [
           Row(
             children: [
-              Icon(Icons.add_a_photo_outlined, color: AppColors.mainTextColor, size: 23),
+              Icon(Icons.add_a_photo_outlined, color: AppColors.textColor, size: 23),
               SizedBox(width: 8),
               Text('Бүх бүтээлүүд',
                   style: GoogleFonts.kurale(
                     fontSize: 18,
-                    color: AppColors.mainTextColor,
+                    color: AppColors.textColor,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   )),

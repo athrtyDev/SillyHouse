@@ -8,27 +8,27 @@ import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/locator.dart';
 
 class Post {
-  String postId;
-  DateTime postDate;
-  String uploadMediaType;
-  String mediaDownloadUrl;
-  String coverDownloadUrl; // if it is video. null on image
-  String userId;
-  String userName;
-  Activity activity;
-  User user;
-  File uploadingFile;
-  int skillPoints;
-  bool isFeatured;
+  String? postId;
+  DateTime? postDate;
+  String? uploadMediaType;
+  String? mediaDownloadUrl;
+  String? coverDownloadUrl; // if it is video. null on image
+  String? userId;
+  String? userName;
+  Activity? activity;
+  User? user;
+  File? uploadingFile;
+  int? skillPoints;
+  bool? isFeatured;
   // tuslah
-  int likeCount;
+  int? likeCount;
   bool isUserLiked = false;
-  List<Comment> listComment;
-  PickedMedia pickedMedia;
-  List<CameraDescription> cameras;
+  List<Comment>? listComment;
+  PickedMedia? pickedMedia;
+  late List<CameraDescription> cameras;
   bool isSelected = false;
-  String cacheMediaPath;
-  final Api _api = locator<Api>();
+  late String cacheMediaPath;
+  final Api? _api = locator<Api>();
 
   Post(
       {this.postId,
@@ -72,10 +72,10 @@ class Post {
     data['uploadMediaType'] = this.uploadMediaType ?? '';
     data['userId'] = this.userId ?? '';
     data['userName'] = this.userName ?? '';
-    data['activityId'] = this.activity.id ?? '';
-    data['activityName'] = this.activity.name ?? '';
-    data['activityType'] = this.activity.activityType ?? '';
-    data['activityDifficulty'] = this.activity.difficulty ?? '';
+    data['activityId'] = this.activity!.id ?? '';
+    data['activityName'] = this.activity!.name ?? '';
+    data['activityType'] = this.activity!.activityType ?? '';
+    data['activityDifficulty'] = this.activity!.difficulty ?? '';
     data['mediaDownloadUrl'] = this.mediaDownloadUrl ?? '';
     data['coverDownloadUrl'] = this.coverDownloadUrl ?? '';
     data['postDate'] = this.postDate ?? '';
@@ -85,16 +85,16 @@ class Post {
     return data;
   }
 
-  void likePost(Post post, String userId) {
+  void likePost(Post post, String? userId) {
     post.isUserLiked = true;
     if (post.likeCount == null) post.likeCount = 0;
-    post.likeCount++;
-    _api.likePost(post, userId);
+    post.likeCount = post.likeCount! + 1;
+    _api!.likePost(post, userId);
   }
 
-  void dislikePost(Post post, String userId) {
+  void dislikePost(Post post, String? userId) {
     post.isUserLiked = false;
-    post.likeCount--;
-    _api.dislikePost(post, userId);
+    post.likeCount = post.likeCount! - 1;
+    _api!.dislikePost(post, userId);
   }
 }

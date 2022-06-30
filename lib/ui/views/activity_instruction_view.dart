@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -11,11 +12,9 @@ import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/core/services/tool.dart';
 import 'package:sillyhouseorg/core/viewmodels/activity_instruction_model.dart';
 import 'package:sillyhouseorg/locator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/ui/globals/color.dart';
 import 'package:sillyhouseorg/ui/views/base_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,20 +22,20 @@ import 'package:sillyhouseorg/ui/widgets/my_app_bar.dart';
 import 'package:video_player/video_player.dart';
 
 class ActivityInstructionView extends StatefulWidget {
-  final Activity activity;
+  final Activity? activity;
 
-  ActivityInstructionView({@required this.activity});
+  ActivityInstructionView({required this.activity});
 
   @override
   _ActivityInstructionViewState createState() => _ActivityInstructionViewState();
 }
 
 class _ActivityInstructionViewState extends State<ActivityInstructionView> {
-  List<Post> relatedPosts;
-  final Api _api = locator<Api>();
-  ScrollController scrollViewController;
+  List<Post>? relatedPosts;
+  final Api? _api = locator<Api>();
+  ScrollController? scrollViewController;
   int _carouselIndex = 0;
-  bool mediaDownloadingState;
+  late bool mediaDownloadingState;
 
   @override
   void initState() {
@@ -49,7 +48,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
   @override
   void dispose() {
     _disposeVideos();
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
     super.dispose();
   }
 
@@ -67,8 +66,8 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
           child: Scaffold(
               appBar: myAppBar(
                 leadingFunction: () => Navigator.of(context).pop(),
-                title: widget.activity.name,
-              ),
+                title: widget.activity!.name,
+              ) as PreferredSizeWidget?,
               backgroundColor: Colors.white,
               body: SingleChildScrollView(
                 child: Column(children: <Widget>[
@@ -122,15 +121,15 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                     style:
                         GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
                 SizedBox(height: 5),
-                Text(widget.activity.instruction,
+                Text(widget.activity!.instruction!,
                     style:
                         GoogleFonts.kurale(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.5)),
               ],
             )),
-        widget.activity.getListMedia() == null
+        widget.activity!.getListMedia() == null
             ? SizedBox()
             : Container(
-                height: widget.activity.getListMedia().length == 1 ? 400 : 370,
+                height: widget.activity!.getListMedia()!.length == 1 ? 400 : 370,
                 width: MediaQuery.of(context).size.width,
                 child: mediaDownloadingState
                     ? Container(child: Center(child: CircularProgressIndicator()))
@@ -139,11 +138,11 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           // progress circles
-                          widget.activity.getListMedia().length == 1
+                          widget.activity!.getListMedia()!.length == 1
                               ? Container()
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(widget.activity.getListMedia().length, (index) {
+                                  children: List.generate(widget.activity!.getListMedia()!.length, (index) {
                                     return AnimatedContainer(
                                       duration: Duration(milliseconds: 200),
                                       curve: Curves.easeIn,
@@ -157,14 +156,14 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                     );
                                   }),
                                 ),
-                          widget.activity.getListMedia().length == 1
+                          widget.activity!.getListMedia()!.length == 1
                               ? Container()
                               : SizedBox(
                                   height: 10,
                                 ),
                           CarouselSlider(
                             options: CarouselOptions(
-                              height: widget.activity.getListMedia().length == 1 ? 400 : 330,
+                              height: widget.activity!.getListMedia()!.length == 1 ? 400 : 330,
                               initialPage: 0,
                               enlargeCenterPage: true,
                               autoPlay: false,
@@ -173,7 +172,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                               autoPlayInterval: Duration(seconds: 2),
                               autoPlayAnimationDuration: Duration(milliseconds: 2000),
                               pauseAutoPlayOnTouch: true,
-                              scrollDirection: widget.activity.getListMedia().length == 1 ? Axis.vertical : Axis.horizontal,
+                              scrollDirection: widget.activity!.getListMedia()!.length == 1 ? Axis.vertical : Axis.horizontal,
                               onPageChanged: (index, reason) {
                                 setState(() {
                                   _carouselIndex = index;
@@ -181,7 +180,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                 });
                               },
                             ),
-                            items: widget.activity.getListMedia().map((media) {
+                            items: widget.activity!.getListMedia()!.map((media) {
                               return Builder(
                                 builder: (BuildContext mediaContext) {
                                   return Container(
@@ -216,11 +215,11 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                           // IMAGE
                                           media.cachePath == null
                                               ? CachedNetworkImage(
-                                                  imageUrl: media.url,
+                                                  imageUrl: media.url!,
                                                   fit: BoxFit.fill,
                                                   errorWidget: (context, url, error) => Icon(Icons.error),
                                                 )
-                                              : Image.file(File(media.cachePath), fit: BoxFit.fill));
+                                              : Image.file(File(media.cachePath!), fit: BoxFit.fill));
                                 },
                               );
                             }).toList(),
@@ -262,7 +261,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                 padding: EdgeInsets.fromLTRB(5, 4, 0, 4),
                                 decoration:
                                     BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.all(Radius.circular(10))),
-                                child: Text('+' + widget.activity.skill.toString() + ' оноо',
+                                child: Text('+' + widget.activity!.skill.toString() + ' оноо',
                                     style: GoogleFonts.kurale(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w600)),
                               ),
                             ],
@@ -280,20 +279,20 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                       children: [
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 5, 3),
-                          child: widget.activity.difficulty == 'easy'
+                          child: widget.activity!.difficulty == 'easy'
                               ? Image.asset('lib/ui/images/icon_easy.png', height: 25)
-                              : (widget.activity.difficulty == 'medium'
+                              : (widget.activity!.difficulty == 'medium'
                                   ? Image.asset('lib/ui/images/icon_medium.png', height: 25)
-                                  : (widget.activity.difficulty == 'hard'
+                                  : (widget.activity!.difficulty == 'hard'
                                       ? Image.asset('lib/ui/images/icon_hard.png', height: 25)
                                       : Text(''))),
                         ),
                         Text(
-                            widget.activity.difficulty == 'easy'
+                            widget.activity!.difficulty == 'easy'
                                 ? 'Амархан'
-                                : (widget.activity.difficulty == 'medium'
+                                : (widget.activity!.difficulty == 'medium'
                                     ? 'Дунд зэрэг'
-                                    : (widget.activity.difficulty == 'hard' ? 'Хэцүү' : Text(''))),
+                                    : (widget.activity!.difficulty == 'hard' ? 'Хэцүү' : Text('') as String)),
                             style: GoogleFonts.kurale(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w600))
                       ],
                     ),
@@ -334,7 +333,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   mainAxisSpacing: 5.0,
-                  children: relatedPosts.map((Post post) {
+                  children: relatedPosts!.map((Post post) {
                     return GestureDetector(
                         onTap: () {
                           setState(() {
@@ -352,10 +351,10 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                         width: 230,
                                         child: post.uploadMediaType == 'image'
                                             ? (post.mediaDownloadUrl != null
-                                                ? Image.network(post.mediaDownloadUrl, fit: BoxFit.cover)
+                                                ? Image.network(post.mediaDownloadUrl!, fit: BoxFit.cover)
                                                 : Center(child: Icon(Icons.error, size: 20)))
                                             : (post.coverDownloadUrl != null
-                                                ? Image.network(post.coverDownloadUrl, fit: BoxFit.cover)
+                                                ? Image.network(post.coverDownloadUrl!, fit: BoxFit.cover)
                                                 : Center(
                                                     child: Icon(
                                                     Icons.ondemand_video,
@@ -388,7 +387,7 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
                                     children: [
                                       Icon(Icons.person, color: Colors.black54, size: 15),
                                       SizedBox(width: 3),
-                                      Text(post.userName,
+                                      Text(post.userName!,
                                           style: GoogleFonts.kurale(
                                               fontSize: 12, color: Colors.black54, fontWeight: FontWeight.w500)),
                                     ],
@@ -404,16 +403,16 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
   }
 
   _disposeVideos() {
-    if (widget.activity.getListMedia() != null && widget.activity.getListMedia().isNotEmpty) {
-      for (Media media in widget.activity.getListMedia()) {
+    if (widget.activity!.getListMedia() != null && widget.activity!.getListMedia()!.isNotEmpty) {
+      for (Media media in widget.activity!.getListMedia()!) {
         if (media.type == 'video') media.videoController.dispose();
       }
     }
   }
 
   _pauseVideos() {
-    if (widget.activity.getListMedia() != null && widget.activity.getListMedia().isNotEmpty) {
-      for (Media media in widget.activity.getListMedia()) {
+    if (widget.activity!.getListMedia() != null && widget.activity!.getListMedia()!.isNotEmpty) {
+      for (Media media in widget.activity!.getListMedia()!) {
         if (media.type == 'video' && media.videoController.value.isPlaying) media.videoController.pause();
       }
     }
@@ -424,19 +423,19 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
       setState(() {
         mediaDownloadingState = true;
       });
-      if (widget.activity.getListMedia() != null && widget.activity.getListMedia().isNotEmpty) {
+      if (widget.activity!.getListMedia() != null && widget.activity!.getListMedia()!.isNotEmpty) {
         int mediaCount = 0;
         int videoCount = 0;
-        String cachePath;
+        late String cachePath;
         if (Platform.isAndroid) {
-          var cacheDir = await getExternalCacheDirectories();
+          var cacheDir = await (getExternalCacheDirectories() as FutureOr<List<Directory>>);
           cachePath = cacheDir.first.path;
         }
         var dio = Dio();
-        for (Media media in widget.activity.getListMedia()) {
+        for (Media media in widget.activity!.getListMedia()!) {
           // save to cache
           mediaCount++;
-          if (Platform.isAndroid) media.cachePath = await Tool.cacheMedia(widget.activity, media, mediaCount, cachePath, dio);
+          if (Platform.isAndroid) media.cachePath = await Tool.cacheMedia(widget.activity!, media, mediaCount, cachePath, dio);
 
           // IF video => initialize player
           if (media.type == 'video') {
@@ -445,15 +444,15 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
               //VideoPlayerController videoController = VideoPlayerController.network(media.url);
               VideoPlayerController videoController;
               if (media.cachePath == null)
-                videoController = VideoPlayerController.network(media.url);
+                videoController = VideoPlayerController.network(media.url!);
               else
-                videoController = VideoPlayerController.file(File(media.cachePath));
+                videoController = VideoPlayerController.file(File(media.cachePath!));
               media.videoController = videoController;
               Future<void> initializeVideoPlayer = videoController.initialize();
               media.initializeVideoPlayer = initializeVideoPlayer;
               media.videoController.setLooping(false);
               media.videoController.setVolume(4.0);
-              if (videoCount == 1 && widget.activity.autoPlay) media.videoController.play();
+              if (videoCount == 1 && widget.activity!.autoPlay!) media.videoController.play();
             });
           }
         }
@@ -469,17 +468,17 @@ class _ActivityInstructionViewState extends State<ActivityInstructionView> {
   void getPosts(BuildContext context) async {
     try {
       User loggedUser = Provider.of<User>(context, listen: false);
-      relatedPosts = await _api.getPostByActivity(widget.activity);
-      List<Like> allLikes = await _api.getAllLikes();
+      relatedPosts = await _api!.getPostByActivity(widget.activity!);
+      List<Like>? allLikes = await _api!.getAllLikes();
 
       setState(() {
         if (relatedPosts != null && allLikes != null) {
           for (Like like in allLikes) {
-            for (Post post in relatedPosts) {
+            for (Post post in relatedPosts!) {
               // Count every post's like
               if (like.postId == post.postId) {
                 if (post.likeCount == null) post.likeCount = 0;
-                post.likeCount++;
+                post.likeCount = post.likeCount! + 1;
               }
               // Check if logged user liked the post
               if (post.isUserLiked == null) post.isUserLiked = false;

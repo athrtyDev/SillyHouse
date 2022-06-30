@@ -11,16 +11,16 @@ import 'package:sillyhouseorg/ui/widgets/my_story_view.dart';
 import 'package:sillyhouseorg/ui/widgets/on_image_text.dart';
 
 class TopPostPanel extends StatefulWidget {
-  const TopPostPanel({Key key}) : super(key: key);
+  const TopPostPanel({Key? key}) : super(key: key);
 
   @override
   _TopPostPanelState createState() => _TopPostPanelState();
 }
 
 class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMixin {
-  ScrollController scrollViewController;
-  AnimationController _animationController;
-  Animation _animation;
+  ScrollController? scrollViewController;
+  late AnimationController _animationController;
+  late Animation _animation;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
 
   @override
   void dispose() {
-    scrollViewController.dispose();
+    scrollViewController!.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -45,7 +45,7 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return BaseView<PostStoriesModel>(
       onModelReady: (model) => model.getFeaturedPost(),
-      builder: (context, model, child) => model.state == ViewState.Busy || model.listPost == null || model.listPost.isEmpty
+      builder: (context, model, child) => model.state == ViewState.Busy || model.listPost == null || model.listPost!.isEmpty
           ? SizedBox()
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,10 +66,10 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
                     childAspectRatio: 1.25,
                     scrollDirection: Axis.horizontal,
                     mainAxisSpacing: 5,
-                    children: model.listPost.map((Post post) {
+                    children: model.listPost!.map((Post post) {
                       return InkWell(
                         onTap: () {
-                          showStoryDialog(model.listPost, post);
+                          showStoryDialog(model.listPost!, post);
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -86,7 +86,7 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
                               ClipRRect(
                                 borderRadius: BorderRadius.all(Radius.circular(20)),
                                 child: CachedNetworkImage(
-                                  imageUrl: post.coverDownloadUrl,
+                                  imageUrl: post.coverDownloadUrl!,
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) => Icon(Icons.error),
                                 ),
@@ -94,7 +94,7 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
                               Positioned(
                                 left: 5,
                                 bottom: 5,
-                                child: OnImageText(text: post.activity.name),
+                                child: OnImageText(text: post.activity!.name),
                               ),
                             ],
                           ),
@@ -113,7 +113,7 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
       listPost.length,
       (index) => StoryType(
         media: MyMedia(url: listPost[index].coverDownloadUrl, type: listPost[index].uploadMediaType),
-        title: listPost[index].activity.name,
+        title: listPost[index].activity!.name,
       ),
     );
     int startingIndex = 0;

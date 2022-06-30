@@ -1,6 +1,6 @@
 class Like {
-  String postId;
-  String likedUserId;
+  String? postId;
+  String? likedUserId;
 
   Like({this.postId, this.likedUserId});
 
