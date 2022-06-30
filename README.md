@@ -2,5 +2,5 @@
 
 Safe Social platform for kids
 
-## Getting Started
+## ios
 arch -x86_64 pod install --repo-update
