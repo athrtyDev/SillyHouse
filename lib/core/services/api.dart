@@ -18,6 +18,7 @@ class Api {
   var client = new http.Client();
 
   Future<InterfaceDynamic?> getInterfaceDynamic() async {
+    print("Request:::::: getInterfaceDynamic");
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance.collection('Interface_dynamic').get();
 
     if (itemSnapshot.docs.isEmpty) {
@@ -28,7 +29,39 @@ class Api {
     }
   }
 
+  Future<void> registerUser(User user) async {
+    print("Request:::::: registerUser");
+    if (user.profileFile != null) {
+      final Api _api = Api();
+      String profilePicUrl = await _api.uploadFile(user.profileFile!, "user/profile_pic/" + user.id!, "image");
+      user.profile_pic = profilePicUrl;
+    }
+    await FirebaseFirestore.instance.collection('User').add(user.toJson());
+  }
+
+  Future<User?> fetchUser(String name, String password) async {
+    print("Request:::::: fetchUser");
+    QuerySnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('User')
+        .where('name', isEqualTo: name)
+        .where('password', isEqualTo: password)
+        .get();
+
+    if (customerSnapshot.docs.isEmpty) {
+      return null;
+    } else {
+      return User.fromJson(customerSnapshot.docs[0].data() as Map<String, dynamic>);
+    }
+  }
+
+  Future<bool> checkUserNameExists(String name) async {
+    print("Request:::::: checkUserNameExists");
+    QuerySnapshot customerSnapshot = await FirebaseFirestore.instance.collection('User').where('name', isEqualTo: name).get();
+    return customerSnapshot.docs.isNotEmpty;
+  }
+
   Future<List<ActivityType>?> getActivityType() async {
+    print("Request:::::: getActivityType");
     QuerySnapshot itemSnapshot =
         await FirebaseFirestore.instance.collection('Activity_type').orderBy('id', descending: false).get();
 
@@ -39,6 +72,7 @@ class Api {
   }
 
   Future<List<Activity>?> getAllActivity() async {
+    print("Request:::::: getAllActivity");
     // Important!: Return both active and inactive
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance.collection('Activity').orderBy('id', descending: false).get();
     if (itemSnapshot.docs.isEmpty)
@@ -56,6 +90,7 @@ class Api {
   }
 
   Future<List<Activity>?> getActivityByType(String activityType) async {
+    print("Request:::::: getActivityByType");
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance
         .collection('Activity')
         .where('isActive', isEqualTo: true)
@@ -69,6 +104,7 @@ class Api {
   }
 
   Future<Activity?> getActivityById(String id, String type) async {
+    print("Request:::::: getActivityById");
     QuerySnapshot itemSnapshot = await FirebaseFirestore.instance
         .collection('Activity')
         .where('activityType', isEqualTo: type)
@@ -84,6 +120,7 @@ class Api {
   }
 
   Future<String?> savePost(Post post, File? file) async {
+    print("Request:::::: savePost");
     try {
       File thumbnailFile;
       String coverDownloadUrl = '';
@@ -145,6 +182,7 @@ class Api {
       postJson['uploadMediaType'] = post.uploadMediaType;
       postJson['userId'] = post.user!.id;
       postJson['userName'] = post.user!.name;
+      postJson['userProfilePic'] = post.user!.profile_pic;
       postJson['activityId'] = post.activity!.id;
       postJson['activityName'] = post.activity!.name;
       postJson['activityType'] = post.activity!.activityType;
@@ -175,18 +213,26 @@ class Api {
   }
 
   Future<List<Post>?> getAllPost() async {
+    print("Request:::::: getAllPost");
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Post').orderBy('postDate', descending: true).get();
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
-      return postSnapshot.docs.map((post) => new Post.fromJson(post.data() as Map<String, dynamic>)).toList();
+      List<Post>? listAll = [];
+      for (var item in postSnapshot.docs) {
+        Post post = new Post.fromJson(item.data() as Map<String, dynamic>);
+        post.docId = item.id;
+        listAll.add(post);
+      }
+      return listAll;
     }
   }
 
-  Future<List<Post>?> getPostByUser(User user) async {
+  Future<List<Post>?> getPostByUser(String userId) async {
+    print("Request:::::: getPostByUser");
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
-        .where('userId', isEqualTo: user.id)
+        .where('userId', isEqualTo: userId)
         .orderBy('postDate', descending: true)
         .get();
     if (postSnapshot.docs.isEmpty) {
@@ -197,6 +243,7 @@ class Api {
   }
 
   Future<List<Post>?> getPostStory() async {
+    print("Request:::::: getPostStory");
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
         .where('isFeatured', isEqualTo: true)
@@ -209,11 +256,11 @@ class Api {
     }
   }
 
-  Future<List<Post>?> getPostByActivity(Activity activity) async {
+  Future<List<Post>?> getPostByActivity(String activityId) async {
+    print("Request:::::: getPostByActivity");
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
-        //.where('activityType', isEqualTo: activity.activityType)
-        .where('activityId', isEqualTo: activity.id)
+        .where('activityId', isEqualTo: activityId)
         .orderBy('postDate', descending: true)
         .get();
     if (postSnapshot.docs.isEmpty) {
@@ -224,6 +271,7 @@ class Api {
   }
 
   Future<void> deletePost(Post post) async {
+    print("Request:::::: deletePost");
     // delete document
     await FirebaseFirestore.instance.collection('Post').where("postId", isEqualTo: post.postId).get().then((snapshot) {
       snapshot.docs.first.reference.delete();
@@ -243,23 +291,21 @@ class Api {
       print('Successfully deleted COVER storage item');
     }
 
-    // delete from cache
-    if (await File(post.cacheMediaPath).exists()) {
-      File(post.cacheMediaPath).delete();
-      print('Successfully deleted ' + post.cacheMediaPath + ' cache');
-    }
+    // // delete from cache
+    // if (await File(post.cacheMediaPath).exists()) {
+    //   File(post.cacheMediaPath).delete();
+    //   print('Successfully deleted ' + post.cacheMediaPath + ' cache');
+    // }
   }
 
   Future<List<Comment>?> getListComment(String? postId) async {
+    print("Request:::::: getListComment");
     QuerySnapshot postSnapshot;
     if (postId == null || postId == '') {
-      postSnapshot = await FirebaseFirestore.instance.collection('Comment').orderBy('date', descending: true).get();
+      postSnapshot = await FirebaseFirestore.instance.collection('Comment').orderBy('date').get();
     } else {
-      postSnapshot = await FirebaseFirestore.instance
-          .collection('Comment')
-          .where('postId', isEqualTo: postId)
-          .orderBy('date', descending: true)
-          .get();
+      postSnapshot =
+          await FirebaseFirestore.instance.collection('Comment').where('postId', isEqualTo: postId).orderBy('date').get();
     }
 
     if (postSnapshot.docs.isEmpty) {
@@ -270,11 +316,13 @@ class Api {
   }
 
   Future<void> postComment(Comment newComment) async {
+    print("Request:::::: postComment");
     final CollectionReference ref = FirebaseFirestore.instance.collection('Comment');
     ref.doc().set(newComment.toJson());
   }
 
   Future<List<Like>?> getAllLikes() async {
+    print("Request:::::: getAllLikes");
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Like').get();
     if (postSnapshot.docs.isEmpty) {
       return null;
@@ -283,41 +331,42 @@ class Api {
     }
   }
 
-  void likePost(Post post, String? userId) {
-    Like like = new Like();
-    like.postId = post.postId;
-    like.likedUserId = userId;
-    final CollectionReference ref = FirebaseFirestore.instance.collection('Like');
-    ref.doc().set(like.toJson());
+  Future<List<Like>?> getLikeByUser(String userId) async {
+    print("Request:::::: getLikeByUser");
+    QuerySnapshot postSnapshot =
+        await FirebaseFirestore.instance.collection('Like').where('likedUserId', isEqualTo: userId).get();
+    if (postSnapshot.docs.isEmpty) {
+      return null;
+    } else {
+      return postSnapshot.docs.map((like) => new Like.fromJson(like.data() as Map<String, dynamic>)).toList();
+    }
   }
 
-  void dislikePost(Post post, String? userId) {
-    FirebaseFirestore.instance
-        .collection('Like')
-        .where("likedUserId", isEqualTo: userId)
-        .where("postId", isEqualTo: post.postId)
-        .get()
-        .then((snapshot) {
-      snapshot.docs.first.reference.delete();
-    });
+  Future<void> updatePost(Post post) async {
+    print("Request:::::: updatePost");
+    FirebaseFirestore.instance.collection('Post').doc(post.docId).update(post.toJson());
   }
 
   Future<void> deleteComment(String? commentId) async {
+    print("Request:::::: deleteComment");
     FirebaseFirestore.instance.collection('Comment').where("commentId", isEqualTo: commentId).get().then((snapshot) {
       snapshot.docs.first.reference.delete();
     });
   }
 
   Future<void> createActivity(Activity activity) async {
+    print("Request:::::: createActivity");
     final CollectionReference ref = FirebaseFirestore.instance.collection('Activity');
     ref.doc().set(activity.toJson());
   }
 
   Future<void> updateActivity(Activity activity) async {
+    print("Request:::::: updateActivity");
     FirebaseFirestore.instance.collection('Activity').doc(activity.docId).update(activity.toJson());
   }
 
   Future<String> uploadFile(File file, String path, String? type) async {
+    print("Request:::::: uploadFile");
     type = type == 'image' ? 'image/jpeg' : 'video/mp4';
     print('File upload starting... ' + DateTime.now().toString());
     UploadTask fileUploadTask = FirebaseStorage.instance.ref().child(path).putFile(file, SettableMetadata(contentType: type));
@@ -326,9 +375,10 @@ class Api {
     return downloadUrl;
   }
 
-  Future<ChallengeSubmit> getChallengeSubmitByUser(User user) async {
+  Future<ChallengeSubmit> getChallengeSubmitByUser(String userId) async {
+    print("Request:::::: getChallengeSubmitByUser");
     QuerySnapshot itemSnapshot =
-        await FirebaseFirestore.instance.collection('Challenge_submits').where('userId', isEqualTo: user.id).get();
+        await FirebaseFirestore.instance.collection('Challenge_submits').where('userId', isEqualTo: userId).get();
 
     if (itemSnapshot.docs.isEmpty)
       return ChallengeSubmit.initial();
@@ -337,11 +387,13 @@ class Api {
   }
 
   Future<void> createChallengeSubmit(ChallengeSubmit submit) async {
+    print("Request:::::: createChallengeSubmit");
     final CollectionReference ref = FirebaseFirestore.instance.collection('Challenge_submits');
     ref.doc().set(submit.toJson());
   }
 
   Future<void> updateChallengeSubmit(ChallengeSubmit submit) async {
+    print("Request:::::: updateChallengeSubmit");
     FirebaseFirestore.instance.collection('Challenge_submits').doc(submit.docId).update(submit.toJson());
   }
 }

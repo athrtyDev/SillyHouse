@@ -1,31 +1,45 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:sillyhouseorg/core/classes/user.dart';
-import 'package:sillyhouseorg/core/services/authentication_service.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sillyhouseorg/global/global.dart';
-import 'package:sillyhouseorg/locator.dart';
-import 'package:sillyhouseorg/ui/router.dart';
-import 'package:provider/provider.dart';
+import 'package:sillyhouseorg/router.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/app/cubit.dart';
+import 'bloc/user/cubit.dart';
 
 void main() async {
-  setupLocator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   app = Globals();
-  runApp(MyApp());
+  final storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
+  HydratedBlocOverrides.runZoned(
+    () => runApp(MyApp()),
+    storage: storage,
+  );
 }
 
 class MyApp extends StatelessWidget {
   MyApp();
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   final AppRouter _appRouter = AppRouter();
+  final AppCubit appCubit = AppCubit();
+  final UserCubit userCubit = UserCubit();
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<User?>(
-        create: (_) => locator<AuthenticationService>().userController.stream,
-        initialData: User.initial(),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<AppCubit>(
+            create: (context) => appCubit,
+          ),
+          BlocProvider<UserCubit>(
+            create: (context) => userCubit,
+          ),
+        ],
         child: MaterialApp(
-          title: 'Education',
+          title: 'Silly House',
           theme: ThemeData(),
           initialRoute: ('/splash'),
           debugShowCheckedModeBanner: false,

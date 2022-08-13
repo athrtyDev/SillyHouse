@@ -1,4 +1,4 @@
-import 'package:sillyhouseorg/ui/widgets/my_media.dart';
+import 'package:sillyhouseorg/widgets/my_media.dart';
 
 class StoryType {
   MyMedia? media;
