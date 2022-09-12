@@ -1,9 +1,9 @@
 import 'dart:io';
 
-class PickedMedia {
-  String? path;
-  String? type; // image, video
-  File? storageFile;
+class MyMediaObject {
+  String path;
+  String type; // image, video
+  File storageFile;
 
-  PickedMedia({this.path, this.type, this.storageFile});
+  MyMediaObject({required this.path, required this.type, required this.storageFile});
 }

@@ -27,7 +27,7 @@ class Post {
   // tuslah
   bool isUserLiked = false;
   List<Comment>? listComment;
-  PickedMedia? pickedMedia;
+  MyMediaObject? pickedMedia;
   late List<CameraDescription> cameras;
   bool isSelected = false;
   // late String cacheMediaPath;

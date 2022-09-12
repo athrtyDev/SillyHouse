@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:sillyhouseorg/core/classes/picked_media.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sillyhouseorg/core/services/tool.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 
 class TakeProfilePicturePage extends StatefulWidget {
@@ -47,16 +47,8 @@ class _TakeProfilePicturePageState extends State<TakeProfilePicturePage> with Wi
   }
 
   void _selectMedia(BuildContext context, String type) async {
-    final picker = ImagePicker();
-    var pickedFile;
-    if (type == 'image')
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    else
-      pickedFile = await picker.pickVideo(source: ImageSource.gallery);
-    PickedMedia media = new PickedMedia();
-    media.type = type;
-    //media.storageFile = await Tool.compressImage(File(pickedFile.path));
-    media.storageFile = File(pickedFile.path);
+    MyMediaObject? media = await mediaController.galleryPicker(type: "image");
+    if (media == null) return;
     Navigator.pop(context, media);
   }
 
@@ -64,12 +56,13 @@ class _TakeProfilePicturePageState extends State<TakeProfilePicturePage> with Wi
     try {
       await _initializeCameraControllerFuture;
       imageCache.clear();
-      PickedMedia media = new PickedMedia();
       XFile fileImage = await _cameraController.takePicture();
       print('new image path: ' + fileImage.path);
-      media.path = fileImage.path;
-      media.type = 'image';
-      media.storageFile = await Tool.compressImage(File(fileImage.path));
+      MyMediaObject media = new MyMediaObject(
+        path: fileImage.path,
+        type: 'image',
+        storageFile: await Tool.compressImage(File(fileImage.path)),
+      );
       Navigator.pop(context, media);
     } catch (e) {
       print(e);

@@ -79,12 +79,6 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
                         if (videoController != null && videoController!.value.isPlaying) {
                           videoController!.pause();
                         }
-                        if (widget.post!.pickedMedia != null && widget.post!.pickedMedia!.storageFile != null) {
-                          await widget.post!.pickedMedia!.storageFile!.delete();
-                        }
-                        if (widget.post!.pickedMedia != null && widget.post!.pickedMedia!.path != null) {
-                          await File(widget.post!.pickedMedia!.path!).delete();
-                        }
                         return new Future.value(true);
                       } else {
                         // page is loading. Cannot back
@@ -115,47 +109,42 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
                                   //crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     Container(
-                                        height: (widget.post!.pickedMedia!.type == 'video' &&
-                                                videoController != null &&
-                                                videoController!.value.size != null)
-                                            ? ((MediaQuery.of(context).size.width * videoController!.value.size.height) /
-                                                videoController!.value.size.width)
-                                            : null,
-                                        width:
-                                            widget.post!.pickedMedia!.type == 'video' ? MediaQuery.of(context).size.width : null,
-                                        child: widget.post!.pickedMedia!.type == 'video' && videoController != null
-                                            ?
-                                            // Video
-                                            GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    if (videoController!.value.isPlaying)
-                                                      videoController!.pause();
-                                                    else
-                                                      videoController!.play();
-                                                  });
-                                                },
-                                                child: Stack(
-                                                  children: [
-                                                    VideoPlayer(videoController!),
-                                                    // Play button
-                                                    videoController == null || videoController!.value.isPlaying
-                                                        ? Text('')
-                                                        : Center(
-                                                            child: Icon(
-                                                            Icons.play_circle_filled,
-                                                            color: Colors.white,
-                                                            size: 60,
-                                                          )),
-                                                  ],
-                                                ),
-                                              )
-                                            :
-                                            // Image
-                                            widget.post!.pickedMedia!.storageFile == null
-                                                ? Image.file(File(widget.post!.pickedMedia!.path!), fit: BoxFit.fitWidth)
-                                                : Image.file(File(widget.post!.pickedMedia!.storageFile!.path),
-                                                    fit: BoxFit.fitWidth)),
+                                      height: (widget.post!.pickedMedia!.type == 'video' && videoController != null)
+                                          ? ((MediaQuery.of(context).size.width * videoController!.value.size.height) /
+                                              videoController!.value.size.width)
+                                          : null,
+                                      width: widget.post!.pickedMedia!.type == 'video' ? MediaQuery.of(context).size.width : null,
+                                      child: widget.post!.pickedMedia!.type == 'video' && videoController != null
+                                          ?
+                                          // Video
+                                          GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (videoController!.value.isPlaying)
+                                                    videoController!.pause();
+                                                  else
+                                                    videoController!.play();
+                                                });
+                                              },
+                                              child: Stack(
+                                                children: [
+                                                  VideoPlayer(videoController!),
+                                                  // Play button
+                                                  videoController == null || videoController!.value.isPlaying
+                                                      ? Text('')
+                                                      : Center(
+                                                          child: Icon(
+                                                          Icons.play_circle_filled,
+                                                          color: Colors.white,
+                                                          size: 60,
+                                                        )),
+                                                ],
+                                              ),
+                                            )
+                                          :
+                                          // Image
+                                          Image.file(widget.post!.pickedMedia!.storageFile, fit: BoxFit.fitWidth),
+                                    ),
                                   ],
                                 )),
                               ),
@@ -188,7 +177,7 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
                                                   //   await File(widget.post.pickedMedia.path).delete();
                                                   // }
                                                   try {
-                                                    widget.post!.pickedMedia!.storageFile!.delete();
+                                                    widget.post!.pickedMedia!.storageFile.delete();
                                                   } on Exception catch (e) {
                                                     print('error deleting file: ' + e.toString());
                                                   }
@@ -199,11 +188,10 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
                                               GestureDetector(
                                                 child: Icon(Icons.check, size: 60, color: Colors.green),
                                                 onTap: () {
-                                                  cubit.uploadPost(
-                                                      widget.post!,
-                                                      widget.post!.pickedMedia!.storageFile == null
-                                                          ? File(widget.post!.pickedMedia!.path!)
-                                                          : File(widget.post!.pickedMedia!.storageFile!.path));
+                                                  if (videoController != null && videoController!.value.isPlaying) {
+                                                    videoController!.pause();
+                                                  }
+                                                  cubit.uploadPost(widget.post!, widget.post!.pickedMedia!.storageFile);
                                                 },
                                               ),
                                             ],
@@ -220,14 +208,14 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
 
   void _showCamera() async {
     final cameras = await availableCameras();
-    if (cameras == null || cameras.length == 0) return;
+    if (cameras.length == 0) return;
     widget.post!.cameras = cameras;
-    PickedMedia? media =
+    MyMediaObject? media =
         await Navigator.push(context, MaterialPageRoute(builder: (context) => TakePicturePage(post: widget.post)));
     _updateMedia(media);
   }
 
-  void _updateMedia(PickedMedia? media) async {
+  void _updateMedia(MyMediaObject? media) async {
     setState(() {
       isLoading = true;
     });
@@ -235,9 +223,9 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
 
     if (widget.post!.pickedMedia != null && widget.post!.pickedMedia!.type == 'video') {
       if (widget.post!.pickedMedia!.storageFile == null)
-        videoController = VideoPlayerController.file(File(widget.post!.pickedMedia!.path!));
+        videoController = VideoPlayerController.file(File(widget.post!.pickedMedia!.path));
       else
-        videoController = VideoPlayerController.file(File(widget.post!.pickedMedia!.storageFile!.path));
+        videoController = VideoPlayerController.file(File(widget.post!.pickedMedia!.storageFile.path));
       //initializeVideoPlayer = videoController.initialize();
       await videoController!.initialize();
       setState(() {

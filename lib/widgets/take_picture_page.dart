@@ -5,8 +5,8 @@ import 'package:sillyhouseorg/core/classes/picked_media.dart';
 import 'package:sillyhouseorg/core/classes/post.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sillyhouseorg/core/services/tool.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 
 class TakePicturePage extends StatefulWidget {
@@ -56,16 +56,9 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
     }
   }
 
-  void _selectMedia(BuildContext context, String type) async {
-    final picker = ImagePicker();
-    var pickedFile;
-    if (type == 'image')
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    else
-      pickedFile = await picker.pickVideo(source: ImageSource.gallery);
-    PickedMedia media = new PickedMedia();
-    media.type = type;
-    media.storageFile = await Tool.compressImage(File(pickedFile.path));
+  _selectMedia() async {
+    MyMediaObject? media = await mediaController.galleryPicker();
+    if (media == null) return;
     widget.post!.pickedMedia = media;
     Navigator.pushNamed(context, '/publish', arguments: widget.post);
   }
@@ -74,15 +67,16 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
     try {
       await _initializeCameraControllerFuture;
       imageCache.clear();
-      PickedMedia media = new PickedMedia();
       if (_selectedIndex == 0) {
         //final imgPath = join((await getTemporaryDirectory()).path, (fileName + ".jpeg"));
         //XFile fileImage = XFile(imgPath);
         XFile fileImage = await _cameraController.takePicture();
         print('new image path: ' + fileImage.path);
-        media.path = fileImage.path;
-        media.type = 'image';
-        media.storageFile = await Tool.compressImage(File(fileImage.path));
+        MyMediaObject media = new MyMediaObject(
+          path: fileImage.path,
+          type: 'image',
+          storageFile: await Tool.compressImage(File(fileImage.path)),
+        );
         widget.post!.pickedMedia = media;
         //Navigator.pop(context, media);
         Navigator.pushNamed(context, '/publish', arguments: widget.post);
@@ -100,9 +94,11 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
             _start = !_start;
             _isRec = !_isRec;
           });
-          media.path = file.path;
-          media.type = 'video';
-          media.storageFile = File(file.path);
+          MyMediaObject media = new MyMediaObject(
+            path: file.path,
+            type: 'video',
+            storageFile: File(file.path),
+          );
           widget.post!.pickedMedia = media;
           //Navigator.pop(context, media);
           Navigator.pushNamed(context, '/publish', arguments: widget.post);
@@ -247,71 +243,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
                     backgroundColor: Colors.transparent,
                     child: Icon(Icons.image, color: Colors.white, size: 30),
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (_) => AlertDialog(
-                          elevation: 24,
-                          insetPadding: EdgeInsets.all(0),
-                          contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                          actionsPadding: EdgeInsets.all(0),
-                          buttonPadding: EdgeInsets.all(0),
-                          titlePadding: EdgeInsets.all(0),
-                          backgroundColor: Colors.grey[300],
-                          content: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _selectMedia(context, 'image');
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    color: Colors.green.withOpacity(0.9),
-                                  ),
-                                  width: 110,
-                                  height: 60,
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.photo, color: Colors.white, size: 35),
-                                        SizedBox(width: 5),
-                                        Text('Зураг', style: TextStyle(color: Colors.white)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 15),
-                              GestureDetector(
-                                onTap: () {
-                                  _selectMedia(context, 'video');
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    color: Colors.orange.withOpacity(0.9),
-                                  ),
-                                  width: 110,
-                                  height: 60,
-                                  child: Center(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.videocam, color: Colors.white, size: 35),
-                                        SizedBox(width: 5),
-                                        Text('Бичлэг', style: TextStyle(color: Colors.white)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      _selectMedia();
                     },
                   ),
                 ],

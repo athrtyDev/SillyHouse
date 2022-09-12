@@ -128,11 +128,6 @@ class PostCubit extends Cubit<PostState> {
       final Api _api = Api();
       Post? uploadedPost = await _api.savePost(post, file);
 
-      // if picture is taken by camera. (Not from gallery)
-      if (post.pickedMedia!.storageFile == null && await File(post.pickedMedia!.path!).exists()) {
-        await File(post.pickedMedia!.path!).delete();
-      }
-
       if (uploadedPost != null) {
         // Add to cache
         if (app.allPost == null) {

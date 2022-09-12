@@ -61,7 +61,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
               children: <Widget>[
                 HomeScreen(),
                 ActivityHomeScreen(),
-                ComingSoonScreen(),
+                // CameraScreen(),
                 ComingSoonScreen(),
                 ProfileScreen(),
               ],
@@ -76,15 +76,17 @@ class _MainPageScreenState extends State<MainPageScreen> {
   bottomNavBar() {
     return Container(
       color: Styles.whiteColor,
-      padding: EdgeInsets.fromLTRB(30, 15, 30, 30),
+      padding: EdgeInsets.fromLTRB(0, 15, 0, 25),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          SizedBox(),
           tabItem("Нүүр", "home", Styles.baseColor1, 0),
           tabItem("Хичээл", "activity", Styles.baseColor2, 1),
-          tabItem("Камер", "camera", Styles.baseColor3, 2),
-          tabItem("Тэмцээн", "contest", Styles.baseColor4, 3),
-          tabItem("Миний", "profile", Styles.baseColor5, 4),
+          // tabItem("Камер", "camera", Styles.baseColor3, 2),
+          tabItem("Тэмцээн", "contest", Styles.baseColor4, 2),
+          tabItem("Миний", "profile", Styles.baseColor5, 3),
+          SizedBox(),
         ],
       ),
     );

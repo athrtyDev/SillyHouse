@@ -20,7 +20,7 @@ class Tool {
     return d.toStringAsFixed(d.truncateToDouble() == d ? 0 : 2);
   }
 
-  static Future<File?> compressImage(File file) async {
+  static Future<File> compressImage(File file) async {
     return file;
     // try {
     //   final dir = await path_provider.getTemporaryDirectory();

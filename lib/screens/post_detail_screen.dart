@@ -71,12 +71,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         children: <Widget>[
                           Stack(
                             children: [
-                              Container(
-                                height: 400,
-                                child: MyMedia(
-                                  url: state.post.mediaDownloadUrl!,
-                                  type: state.post.uploadMediaType!,
-                                  placeHolderUrl: state.post.coverDownloadUrl,
+                              ConstrainedBox(
+                                constraints: new BoxConstraints(
+                                  maxHeight: MediaQuery.of(context).size.height * 0.7,
+                                ),
+                                child: Container(
+                                  // height: 400,
+                                  child: MyMedia(
+                                    url: state.post.mediaDownloadUrl!,
+                                    type: state.post.uploadMediaType!,
+                                    placeHolderUrl: state.post.coverDownloadUrl,
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -93,9 +98,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 top: 20,
                                 child: _deletePostButton(),
                               ),
-                              _comments(state.post),
                             ],
                           ),
+                          _comments(state.post),
                           // _likeCommentButton(state.post),
                         ],
                       ),
@@ -111,11 +116,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
 
   Widget _comments(Post post) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 375, 10, 0),
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Styles.whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        // borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Column(
         children: [
@@ -200,9 +205,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     color: Styles.textColor,
                   ),
                   onSubmitted: (newComment) {
-                    _focusComment.unfocus();
-                    cubit.addComment(newComment, context.read<UserCubit>().state.user!, post.postId!);
-                    _commentInput.text = '';
+                    _addComment(post.postId!);
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderSide: new BorderSide(color: Styles.textColor10)),
@@ -228,9 +231,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 text: "Бичих",
                 padding: EdgeInsets.symmetric(horizontal: 18),
                 onTap: () {
-                  _focusComment.unfocus();
-                  cubit.addComment(_commentInput.text, context.read<UserCubit>().state.user!, post.postId!);
-                  _commentInput.text = '';
+                  _addComment(post.postId!);
                 },
               ),
             ],
@@ -305,6 +306,16 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ],
       ),
     );
+  }
+
+  _addComment(String postId) {
+    if (_commentInput.text != "") {
+      _focusComment.unfocus();
+      cubit.addComment(_commentInput.text, context.read<UserCubit>().state.user!, postId);
+      _commentInput.text = '';
+    } else {
+      _focusComment.unfocus();
+    }
   }
 
   deletePost(Post post, BuildContext context) async {

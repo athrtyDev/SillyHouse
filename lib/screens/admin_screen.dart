@@ -5,12 +5,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:sillyhouseorg/core/classes/activity.dart';
 import 'package:sillyhouseorg/core/classes/activity_type.dart';
 import 'package:sillyhouseorg/core/classes/media.dart';
+import 'package:sillyhouseorg/core/classes/picked_media.dart';
 import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/global/global.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 import 'package:sillyhouseorg/widgets/activity_tile.dart';
 
@@ -649,15 +650,10 @@ class _AdminScreenState extends State<AdminScreen> with TickerProviderStateMixin
   }
 
   Future<Media> _selectMedia(String type) async {
-    final picker = ImagePicker();
-    XFile? pickedFile;
-    if (type == 'image')
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    else
-      pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    MyMediaObject? obj = await mediaController.galleryPicker();
     Media media = new Media();
     media.type = type;
-    media.file = File(pickedFile!.path);
+    media.file = obj!.storageFile;
     return media;
   }
 }

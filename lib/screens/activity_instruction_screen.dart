@@ -13,12 +13,15 @@ import 'package:sillyhouseorg/core/services/tool.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sillyhouseorg/global/base_functions.dart';
+import 'package:sillyhouseorg/utils/utils.dart';
 import 'package:sillyhouseorg/widgets/challenge_point.dart';
 import 'package:sillyhouseorg/widgets/difficulty_level.dart';
 import 'package:sillyhouseorg/widgets/loader.dart';
 import 'package:sillyhouseorg/widgets/my_app_bar.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/post_widget.dart';
+import 'package:sillyhouseorg/widgets/profile_picture.dart';
+import 'package:sillyhouseorg/widgets/rectangle_post.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 import 'package:video_player/video_player.dart';
 
@@ -283,20 +286,26 @@ class _ActivityInstructionScreenState extends State<ActivityInstructionScreen> {
                     mainAxisSpacing: 5.0,
                     children: state.listPosts!.map((Post post) {
                       return ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        child: PostWidget(
-                          post: post,
-                          onMediaTap: () async {
-                            baseFunctions.logCatcher(eventName: "Post_View", properties: {
-                              'activityName': post.activity!.name,
-                              'userName': post.userName,
-                            });
-                            Navigator.pushNamed(context, '/post_detail', arguments: {'post': post});
-                          },
-                          onLikeTap: () {},
-                          onCommentTap: () {},
-                        ),
-                      );
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: InkWell(
+                            onTap: () {
+                              baseFunctions.logCatcher(eventName: "Post_View", properties: {
+                                'activityName': post.activity!.name,
+                                'userName': post.userName,
+                              });
+                              Navigator.pushNamed(context, '/post_detail', arguments: {'post': post});
+                            },
+                            child: RectanglePost(
+                              imageUrl: post.coverDownloadUrl!,
+                              leadingTitleWidget: Container(
+                                height: 30,
+                                width: 30,
+                                child: ProfilePicture(url: post.userProfilePic),
+                              ),
+                              header: post.userName ?? "",
+                              subHeader: Utils.convertDate(post.postDate.toString()),
+                            ),
+                          ));
                     }).toList(),
                   ),
                 ),

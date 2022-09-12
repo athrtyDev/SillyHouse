@@ -128,20 +128,17 @@ class Api {
       if (post.uploadMediaType == 'video') {
         // Compress video
         print('Compress video starting... ' + DateTime.now().toString());
-        MediaInfo mediaInfo = await (VideoCompress.compressVideo(
+        MediaInfo? mediaInfo = await (VideoCompress.compressVideo(
           file!.path,
           quality: VideoQuality.MediumQuality,
           deleteOrigin: true,
           includeAudio: true,
-        ) as FutureOr<MediaInfo>);
+        ));
         print('Compress video success! ' + DateTime.now().toString());
-        file = mediaInfo.file;
+        file = mediaInfo!.file;
 
         // Thumbnail image
-        thumbnailFile = await VideoCompress.getFileThumbnail(mediaInfo.path!,
-            quality: 30, // default(100)
-            position: -1 // default(-1)
-            );
+        thumbnailFile = await VideoCompress.getFileThumbnail(file!.path);
 
         // save thumbnail image
         coverDownloadUrl = await uploadFile(

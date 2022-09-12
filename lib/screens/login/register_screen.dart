@@ -245,7 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _addPicture() async {
-    PickedMedia? media = await Navigator.push(context, MaterialPageRoute(builder: (context) => TakeProfilePicturePage()));
+    MyMediaObject? media = await Navigator.push(context, MaterialPageRoute(builder: (context) => TakeProfilePicturePage()));
     if (media != null)
       setState(() {
         profileFile = media.storageFile;
