@@ -4,6 +4,7 @@ import 'package:sillyhouseorg/core/classes/activity.dart';
 import 'package:sillyhouseorg/core/classes/comment.dart';
 import 'package:sillyhouseorg/core/classes/picked_media.dart';
 import 'package:sillyhouseorg/core/classes/user.dart';
+import 'package:sillyhouseorg/utils/utils.dart';
 
 class Post {
   String? docId;
@@ -66,7 +67,7 @@ class Post {
     coverDownloadUrl = (json['coverDownloadUrl'] == null || json['coverDownloadUrl'] == "")
         ? json['mediaDownloadUrl']
         : json['coverDownloadUrl'];
-    postDate = json['postDate'] == null ? (DateTime.parse(json['postDate'].toDate().toString())) : null;
+    postDate = Utils.timestampToDate(json['postDate']);
     skillPoints = json['skillPoints'] != null ? int.tryParse(json['skillPoints'].toString()) : null;
     isFeatured = json['isFeatured'] ?? false;
     likeCount = json['likeCount'] != null ? int.parse(json['likeCount'].toString()) : 0;

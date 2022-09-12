@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:sillyhouseorg/core/classes/user.dart';
 import 'package:sillyhouseorg/core/services/api.dart';
+import 'package:sillyhouseorg/global/global.dart';
 import 'package:uuid/uuid.dart';
 import 'cubit.dart';
 
@@ -53,6 +54,7 @@ class UserCubit extends Cubit<UserState> with HydratedMixin {
   }
 
   void logOut() async {
+    app.allPost = null; // post awahdaa tuhain user like darsan esehiig tootsoj bga bolhor null bolgoh
     emit(UserState(user: null));
   }
 

@@ -33,7 +33,7 @@ class MyText extends StatelessWidget {
       this.height})
       : this.size = Styles.xlarge;
 
-// size 13
+// size 14
   const MyText.large(this.text,
       {this.fontWeight = Styles.wBold,
       this.textColor,
@@ -44,12 +44,12 @@ class MyText extends StatelessWidget {
       this.height})
       : this.size = Styles.large;
 
-// size 11
+// size 12
   const MyText.medium(this.text,
       {this.fontWeight, this.textColor, this.decoration, this.textAlign, this.maxLines, this.letterSpacing, this.height})
       : this.size = Styles.medium;
 
-// size 9
+// size 10
   MyText.small(this.text,
       {this.fontWeight, this.textColor, this.decoration, this.textAlign, this.maxLines, this.letterSpacing, this.height})
       : this.size = Styles.small;
@@ -58,7 +58,7 @@ class MyText extends StatelessWidget {
   Widget build(BuildContext context) => Text(
         this.text,
         style: TextStyle(
-            fontFamily: 'Mulish',
+            fontFamily: 'NunitoSans',
             fontWeight: this.fontWeight ?? Styles.wSemiBold,
             fontSize: this.size,
             decoration: this.decoration ?? TextDecoration.none,

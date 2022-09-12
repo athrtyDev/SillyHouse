@@ -1,8 +1,7 @@
 import 'package:sillyhouseorg/core/classes/activity.dart';
-import 'package:sillyhouseorg/core/classes/activity_type.dart';
 import 'package:sillyhouseorg/core/classes/post.dart';
-import 'package:sillyhouseorg/screens/activity_home_screen.dart';
 import 'package:sillyhouseorg/screens/activity_instruction_screen.dart';
+import 'package:sillyhouseorg/screens/activity_list_screen.dart';
 import 'package:sillyhouseorg/screens/admin_screen.dart';
 import 'package:sillyhouseorg/screens/challenge_home_screen.dart';
 import 'package:sillyhouseorg/screens/choose_challenge_post_screen.dart';
@@ -34,29 +33,28 @@ class AppRouter {
 
       /// MAIN SCREENS
       case '/mainPage':
-        var uploadSuccess = settings.arguments as bool?;
-        return MaterialPageRoute(builder: (_) => MainPageScreen(uploadSuccess: uploadSuccess));
-      case '/activity_list':
-        dynamic args = settings.arguments;
-        List<ActivityType>? listType = args['listType'];
-        ActivityType? selectedType = args['selectedType'];
-        return MaterialPageRoute(builder: (_) => ActivityHomeScreen(listType: listType!, selectedType: selectedType));
+        return MaterialPageRoute(builder: (_) => MainPageScreen(args: settings.arguments));
+      // case '/activity_list':
+      //   dynamic args = settings.arguments;
+      //   List<ActivityType>? listType = args['listType'];
+      //   ActivityType? selectedType = args['selectedType'];
+      //   return MaterialPageRoute(builder: (_) => ActivityHomeScreen(listType: listType!, selectedType: selectedType));
+      case '/activity_list_route':
+        var list = settings.arguments as List<Activity>;
+        return MaterialPageRoute(builder: (_) => ActivityListScreen(listActivity: list));
       case '/activity_instruction':
-        var activity = settings.arguments as Activity?;
+        var activity = settings.arguments as Activity;
         return MaterialPageRoute(builder: (_) => ActivityInstructionScreen(activity: activity));
       case '/post_detail':
-        var post = settings.arguments as Post;
-        return MaterialPageRoute(builder: (_) => PostDetailScreen(post: post));
+        dynamic args = settings.arguments;
+        Post post = args['post'];
+        bool? fromTappingComment = args['fromTappingComment'];
+        return MaterialPageRoute(builder: (_) => PostDetailScreen(post: post, fromTappingComment: fromTappingComment));
       case '/publish':
         var post = settings.arguments as Post?;
         return MaterialPageRoute(builder: (_) => PublishScreen(post: post));
-      // case '/profile':
-      //   return MaterialPageRoute(builder: (_) => ProfileScreen());
-      // case '/gallery':
-      //   return MaterialPageRoute(builder: (_) => GalleryScreen());
       // case '/notification':
       //   return MaterialPageRoute(builder: (_) => NotificationScreen());
-
       case '/admin':
         return MaterialPageRoute(builder: (_) => AdminScreen());
       case '/challenge_home':

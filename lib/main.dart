@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sillyhouseorg/core/classes/constant.dart';
 import 'package:sillyhouseorg/global/global.dart';
 import 'package:sillyhouseorg/router.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,10 +41,16 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: 'Silly House',
-          theme: ThemeData(),
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
+            fontFamily: 'NunitoSans',
+          ),
           initialRoute: ('/splash'),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: _appRouter.generateRoute,
+          navigatorKey: NavKey,
         ));
   }
 }

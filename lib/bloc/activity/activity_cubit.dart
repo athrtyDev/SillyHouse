@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sillyhouseorg/core/classes/activity.dart';
+import 'package:sillyhouseorg/core/classes/activity_type.dart';
 import 'package:sillyhouseorg/global/global.dart';
 import 'cubit.dart';
 
@@ -17,6 +18,8 @@ class ActivityCubit extends Cubit<ActivityState> {
       newList!.add(activity);
       mapActivity[activity.activityType] = newList;
     }
-    emit(ActivityLoaded(mapActivity: mapActivity));
+
+    List<ActivityType>? listActivityType = await app.getActivityType();
+    emit(ActivityLoaded(mapActivity: mapActivity, listActivityType: listActivityType ?? []));
   }
 }

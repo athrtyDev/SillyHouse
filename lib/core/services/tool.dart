@@ -21,19 +21,20 @@ class Tool {
   }
 
   static Future<File?> compressImage(File file) async {
-    try {
-      final dir = await path_provider.getTemporaryDirectory();
-      final targetPath = dir.absolute.path + "/temp.jpg";
-      var result = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: 50,
-      );
-      return result;
-    } on Exception catch (e) {
-      print("error on compress image: $e");
-      return file;
-    }
+    return file;
+    // try {
+    //   final dir = await path_provider.getTemporaryDirectory();
+    //   final targetPath = dir.absolute.path + "/temp.jpg";
+    //   var result = await FlutterImageCompress.compressAndGetFile(
+    //     file.absolute.path,
+    //     targetPath,
+    //     quality: 50,
+    //   );
+    //   return result;
+    // } on Exception catch (e) {
+    //   print("error on compress image: $e");
+    //   return file;
+    // }
   }
 
   static Future download(Dio dio, String url, String savePath) async {

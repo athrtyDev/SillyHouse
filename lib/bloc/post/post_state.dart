@@ -6,6 +6,29 @@ class PostInitState extends PostState {}
 
 class PostLoading extends PostState {}
 
+class PostErrorState extends PostState {
+  String errorMessage;
+
+  PostErrorState({required this.errorMessage});
+}
+
+class PostHomeLoaded extends PostState {
+  List<Post>? listAllPost;
+  List<Post>? listFeaturedPost;
+
+  PostHomeLoaded({this.listAllPost, this.listFeaturedPost});
+
+  PostHomeLoaded copyWith({List<Post>? listAllPost, List<Post>? listFeaturedPost}) {
+    return PostHomeLoaded(
+      listAllPost: listAllPost ?? this.listAllPost,
+      listFeaturedPost: listFeaturedPost ?? this.listFeaturedPost,
+    );
+  }
+
+  @override
+  List<Object?> get props => [listAllPost, listFeaturedPost];
+}
+
 class PostLoaded extends PostState {
   List<Post>? listPosts;
 
@@ -40,3 +63,5 @@ class PostDetail extends PostState {
   @override
   List<Object?> get props => [post];
 }
+
+class PostUploadSuccess extends PostState {}

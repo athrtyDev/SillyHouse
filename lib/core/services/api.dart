@@ -119,7 +119,7 @@ class Api {
     }
   }
 
-  Future<String?> savePost(Post post, File? file) async {
+  Future<Post?> savePost(Post post, File? file) async {
     print("Request:::::: savePost");
     try {
       File thumbnailFile;
@@ -205,7 +205,18 @@ class Api {
       }).catchError((error) {
         print('Post upload error:' + error);
       });
-      return postId;
+
+      // prepare new post object for cache
+      post.postId = postId;
+      post.likeCount = 0;
+      post.mediaDownloadUrl = downloadUrl;
+      post.coverDownloadUrl = post.uploadMediaType == 'video' ? coverDownloadUrl : downloadUrl;
+      post.postDate = DateTime.now();
+      post.userName = post.user!.name;
+      post.userId = post.user!.id;
+      post.userProfilePic = post.user!.profile_pic;
+
+      return post;
     } catch (e) {
       print('SavePost function error:' + e.toString());
       return null;

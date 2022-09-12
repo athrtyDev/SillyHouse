@@ -11,6 +11,48 @@ import 'cubit.dart';
 class PostCubit extends Cubit<PostState> {
   PostCubit() : super(PostInitState());
 
+  void initHomePost(String userId) async {
+    emit(PostLoading());
+    try {
+      List<Post>? listAllPosts = await app.getAllPost(userId);
+      List<Post> listFeatured = [];
+      if (listAllPosts != null)
+        for (var item in listAllPosts) if (item.isFeatured != null && item.isFeatured!) listFeatured.add(item);
+      emit(PostHomeLoaded(listAllPost: listAllPosts, listFeaturedPost: listFeatured));
+    } catch (e) {
+      print("error home initHomePost: ${e.toString()}");
+      emit(PostHomeLoaded(listAllPost: null));
+    }
+  }
+
+  void likeHomePost(Post post, String userId) {
+    Post newPost = likePost(post, userId);
+    List<Post> listPost = (state as PostHomeLoaded).listAllPost!;
+    for (int i = 0; i < listPost.length; i++) {
+      if (listPost[i].postId == post.postId) {
+        listPost[i] = newPost;
+        break;
+      }
+    }
+    emit((state as PostHomeLoaded).copyWith(listAllPost: listPost));
+  }
+
+  void updateHomePost(Post updatedPost) {
+    List<Post> listPost = (state as PostHomeLoaded).listAllPost!;
+    for (int i = 0; i < listPost.length; i++) {
+      if (listPost[i].postId == updatedPost.postId) {
+        listPost[i] = updatedPost;
+        break;
+      }
+    }
+    emit((state as PostHomeLoaded).copyWith(listAllPost: listPost));
+  }
+
+  void likePostDetailPost(Post post, String userId) {
+    Post newPost = likePost(post, userId);
+    emit(PostDetail(post: newPost));
+  }
+
   void getGalleryPosts(String userId) async {
     emit(PostLoading());
     try {
@@ -46,17 +88,15 @@ class PostCubit extends Cubit<PostState> {
       int postTotal = 0;
       int skillTotal = 0;
       int likeTotal = 0;
-      if (listUserPosts != null) {
-        for (Post post in listUserPosts) {
-          // for (Like like in allLikes!) {
-          //   if (like.postId == post.postId) {
-          //     post.isUserLiked = true;
-          //   }
-          // }
-          postTotal++;
-          skillTotal += post.skillPoints ?? 0;
-          likeTotal += post.likeCount;
-        }
+      for (Post post in listUserPosts) {
+        // for (Like like in allLikes!) {
+        //   if (like.postId == post.postId) {
+        //     post.isUserLiked = true;
+        //   }
+        // }
+        postTotal++;
+        skillTotal += post.skillPoints ?? 0;
+        likeTotal += post.likeCount;
       }
       emit(ProfileLoaded(
         listPosts: listUserPosts,
@@ -86,32 +126,43 @@ class PostCubit extends Cubit<PostState> {
     try {
       post.uploadMediaType = post.pickedMedia!.type;
       final Api _api = Api();
-      String? postId = await _api.savePost(post, file);
-      // cache new published file
-      // var oldFileBytes = await file.readAsBytes();
-      // await Tool.cacheNewPublishedPost(postId!, oldFileBytes);
+      Post? uploadedPost = await _api.savePost(post, file);
+
       // if picture is taken by camera. (Not from gallery)
       if (post.pickedMedia!.storageFile == null && await File(post.pickedMedia!.path!).exists()) {
         await File(post.pickedMedia!.path!).delete();
       }
-      emit(PostInitState());
+
+      if (uploadedPost != null) {
+        // Add to cache
+        if (app.allPost == null) {
+          List<Post> list = [uploadedPost];
+          app.allPost = list;
+        } else {
+          app.allPost!.insert(0, uploadedPost);
+        }
+        emit(PostUploadSuccess());
+      } else {
+        emit(PostErrorState(errorMessage: "Алдаа гарлаа"));
+      }
     } on Exception catch (e) {
       print("error uploadPost: ${e.toString()}");
     }
   }
 
   void getPostDetail(Post post) async {
-    List<Comment>? listComment = await getComments(post);
+    emit(PostDetail(post: post));
+    List<Comment>? listComment = await getComments(post.postId!);
     post.listComment = listComment;
     emit(PostDetail(post: post));
   }
 
-  void likePost(Post post, String userId) {
+  Post likePost(Post post, String userId) {
     final Api _api = Api();
     if (!post.isUserLiked) {
       post.isUserLiked = true;
       post.likeCount = post.likeCount + 1;
-      post.likedUserIds += userId + ";";
+      post.likedUserIds += ";" + userId;
     } else {
       List<String> listLike = post.likedUserIds.split(";");
       if (listLike.contains(userId)) {
@@ -123,7 +174,7 @@ class PostCubit extends Cubit<PostState> {
       }
     }
     _api.updatePost(post);
-    emit(PostDetail(post: post));
+    return post;
   }
 
   void addComment(String commentMessage, User user, String postId) {
@@ -147,9 +198,9 @@ class PostCubit extends Cubit<PostState> {
     emit(PostDetail(post: post));
   }
 
-  Future<List<Comment>?> getComments(post) async {
+  Future<List<Comment>?> getComments(String postId) async {
     final Api _api = Api();
-    return _api.getListComment(post.postId);
+    return _api.getListComment(postId);
   }
 
   void deleteComment(String commentId) async {

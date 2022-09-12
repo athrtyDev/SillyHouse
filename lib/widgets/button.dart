@@ -24,7 +24,7 @@ class Button extends StatelessWidget {
     this.margin,
     this.icon,
     this.iconSvg,
-  })  : buttonColor = Styles.baseColor,
+  })  : buttonColor = Styles.baseColor1,
         textColor = Styles.whiteColor,
         border = Border.all(width: 0, color: Colors.transparent),
         hasShadow = true;
@@ -37,7 +37,7 @@ class Button extends StatelessWidget {
     this.margin,
     this.icon,
     this.iconSvg,
-  })  : buttonColor = Styles.baseColor.withOpacity(0.3),
+  })  : buttonColor = Styles.baseColor1.withOpacity(0.3),
         textColor = Styles.whiteColor,
         border = Border.all(width: 0, color: Colors.transparent),
         hasShadow = false;
@@ -63,7 +63,7 @@ class Button extends StatelessWidget {
     this.margin,
     this.icon,
     this.iconSvg,
-  })  : buttonColor = Styles.secondaryColor,
+  })  : buttonColor = Styles.baseColor4,
         textColor = Styles.whiteColor,
         border = Border.all(width: 0, color: Colors.transparent),
         hasShadow = true;
