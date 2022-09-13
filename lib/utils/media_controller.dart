@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:sillyhouseorg/core/classes/picked_media.dart';
+import 'dart:math' as math;
 
 MediaController mediaController = MediaController();
 
@@ -25,5 +27,13 @@ class MediaController {
     } catch (e) {
       return null;
     }
+  }
+
+  Widget getFlippedImage(Widget image) {
+    return Transform(
+      alignment: Alignment.center,
+      transform: Matrix4.rotationY(math.pi),
+      child: image,
+    );
   }
 }

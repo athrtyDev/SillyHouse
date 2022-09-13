@@ -6,6 +6,7 @@ import 'package:sillyhouseorg/core/classes/constant.dart';
 import 'package:sillyhouseorg/core/classes/post.dart';
 import 'package:sillyhouseorg/core/classes/user.dart';
 import 'package:flutter/material.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/profile_picture.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
@@ -54,11 +55,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             Navigator.pushNamed(context, '/post_detail', arguments: {'post': post});
                           },
-                          child: CachedNetworkImage(
-                            imageUrl: post.coverDownloadUrl!,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => Icon(Icons.error),
-                          ),
+                          child: post.isSelfie != null && post.isSelfie!
+                              ? mediaController.getFlippedImage(CachedNetworkImage(
+                                  imageUrl: post.coverDownloadUrl!,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                ))
+                              : CachedNetworkImage(
+                                  imageUrl: post.coverDownloadUrl!,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                ),
                         );
                       }).toList(),
                     );

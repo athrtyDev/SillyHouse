@@ -24,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final ScrollController _controller = ScrollController();
   String gender = "";
   File? profileFile;
+  bool isSelfie = false;
   bool isLoading = false;
 
   @override
@@ -124,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: Container(
         width: 80,
         height: 80,
-        child: ProfilePicture(file: profileFile, onTap: () => _addPicture()),
+        child: ProfilePicture(file: profileFile, onTap: () => _addPicture(), isSelfie: isSelfie),
       ),
     );
   }
@@ -248,7 +249,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     MyMediaObject? media = await Navigator.push(context, MaterialPageRoute(builder: (context) => TakeProfilePicturePage()));
     if (media != null)
       setState(() {
+        isSelfie = media.isSelfie != null && media.isSelfie!;
         profileFile = media.storageFile;
+        print("aaaaa $isSelfie");
       });
   }
 }

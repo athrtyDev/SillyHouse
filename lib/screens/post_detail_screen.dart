@@ -7,6 +7,7 @@ import 'package:sillyhouseorg/core/classes/post.dart';
 import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/global/global.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/utils/utils.dart';
 import 'package:sillyhouseorg/widgets/back_button.dart';
 import 'package:sillyhouseorg/widgets/button.dart';
@@ -77,11 +78,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 ),
                                 child: Container(
                                   // height: 400,
-                                  child: MyMedia(
-                                    url: state.post.mediaDownloadUrl!,
-                                    type: state.post.uploadMediaType!,
-                                    placeHolderUrl: state.post.coverDownloadUrl,
-                                  ),
+                                  child: state.post.isSelfie != null && state.post.isSelfie!
+                                      ? mediaController.getFlippedImage(MyMedia(
+                                          url: state.post.mediaDownloadUrl!,
+                                          type: state.post.uploadMediaType!,
+                                          placeHolderUrl: state.post.coverDownloadUrl,
+                                        ))
+                                      : MyMedia(
+                                          url: state.post.mediaDownloadUrl!,
+                                          type: state.post.uploadMediaType!,
+                                          placeHolderUrl: state.post.coverDownloadUrl,
+                                        ),
                                 ),
                               ),
                               Positioned(

@@ -189,6 +189,7 @@ class Api {
       postJson['mediaDownloadUrl'] = downloadUrl;
       postJson['coverDownloadUrl'] = post.uploadMediaType == 'video' ? coverDownloadUrl : downloadUrl;
       postJson['postDate'] = DateTime.now();
+      postJson['isSelfie'] = post.pickedMedia!.isSelfie != null && post.pickedMedia!.isSelfie!;
 
       // order -> batch
       var db = FirebaseFirestore.instance;

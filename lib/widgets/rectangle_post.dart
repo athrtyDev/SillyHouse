@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 
@@ -9,6 +10,7 @@ class RectanglePost extends StatelessWidget {
   final String header;
   final String subHeader;
   final Widget? bottomWidget;
+  final bool isSelfie;
 
   const RectanglePost({
     Key? key,
@@ -17,6 +19,7 @@ class RectanglePost extends StatelessWidget {
     required this.header,
     required this.subHeader,
     this.bottomWidget,
+    this.isSelfie = false,
   }) : super(key: key);
 
   @override
@@ -26,11 +29,17 @@ class RectanglePost extends StatelessWidget {
         Stack(
           fit: StackFit.expand,
           children: [
-            CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.cover,
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            ),
+            isSelfie
+                ? mediaController.getFlippedImage(CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ))
+                : CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
           ],
         ),
         // HEADER SHADOW

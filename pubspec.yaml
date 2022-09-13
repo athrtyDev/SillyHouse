@@ -41,6 +41,7 @@ dependencies:
   # media
   cached_network_image: 3.2.0
   camera: ^0.9.4+5
+  exif: ^3.1.2      #for camera package fix flipping
   video_player: 2.2.8
 #  image_picker: 0.8.4+4
   images_picker: ^1.2.11

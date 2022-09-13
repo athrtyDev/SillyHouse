@@ -62,6 +62,7 @@ class _TakeProfilePicturePageState extends State<TakeProfilePicturePage> with Wi
         path: fileImage.path,
         type: 'image',
         storageFile: await Tool.compressImage(File(fileImage.path)),
+        isSelfie: whichCamera == 'front',
       );
       Navigator.pop(context, media);
     } catch (e) {
@@ -74,29 +75,33 @@ class _TakeProfilePicturePageState extends State<TakeProfilePicturePage> with Wi
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Stack(
-          children: <Widget>[
-            FutureBuilder(
-              future: _initializeCameraControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(_cameraController);
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            Positioned(
-                top: 50,
-                right: 30,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Icon(Icons.close_rounded, color: Styles.textColor),
-                  ),
-                ))
-          ],
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          alignment: Alignment(0, 1),
+          child: Stack(
+            children: <Widget>[
+              FutureBuilder(
+                future: _initializeCameraControllerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return CameraPreview(_cameraController);
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+              Positioned(
+                  top: 50,
+                  right: 30,
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(Icons.close_rounded, color: Styles.textColor),
+                    ),
+                  ))
+            ],
+          ),
         ),
         bottomNavigationBar: Container(
           color: Colors.black,

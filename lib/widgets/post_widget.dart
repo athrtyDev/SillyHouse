@@ -66,6 +66,7 @@ class _PostWidgetState extends State<PostWidget> {
               // description: widget.showBottom ? post.activity!.name! : "",
               // descColor: widget.showBottom ? Utils.getActivityTypeColor(post.activity!.activityType!) : Colors.transparent,
               bottomWidget: _postBottomWidget(),
+              isSelfie: post.isSelfie != null && post.isSelfie!,
             ),
           )),
         ],

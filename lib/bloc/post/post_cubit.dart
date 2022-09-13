@@ -125,6 +125,7 @@ class PostCubit extends Cubit<PostState> {
     emit(PostLoading());
     try {
       post.uploadMediaType = post.pickedMedia!.type;
+      post.isSelfie = post.pickedMedia!.isSelfie != null && post.pickedMedia!.isSelfie!;
       final Api _api = Api();
       Post? uploadedPost = await _api.savePost(post, file);
 

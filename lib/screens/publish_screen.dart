@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sillyhouseorg/bloc/post/cubit.dart';
 import 'package:sillyhouseorg/core/classes/picked_media.dart';
 import 'package:sillyhouseorg/core/classes/post.dart';
+import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/my_app_bar.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 import 'package:sillyhouseorg/widgets/take_picture_page.dart';
@@ -143,7 +144,10 @@ class _PublishScreenState extends State<PublishScreen> with SingleTickerProvider
                                             )
                                           :
                                           // Image
-                                          Image.file(widget.post!.pickedMedia!.storageFile, fit: BoxFit.fitWidth),
+                                          widget.post!.pickedMedia!.isSelfie != null && widget.post!.pickedMedia!.isSelfie!
+                                              ? mediaController.getFlippedImage(
+                                                  Image.file(widget.post!.pickedMedia!.storageFile, fit: BoxFit.fitWidth))
+                                              : Image.file(widget.post!.pickedMedia!.storageFile, fit: BoxFit.fitWidth),
                                     ),
                                   ],
                                 )),

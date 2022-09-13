@@ -71,6 +71,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
         //final imgPath = join((await getTemporaryDirectory()).path, (fileName + ".jpeg"));
         //XFile fileImage = XFile(imgPath);
         XFile fileImage = await _cameraController.takePicture();
+
         print('new image path: ' + fileImage.path);
         MyMediaObject media = new MyMediaObject(
           path: fileImage.path,
@@ -78,7 +79,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
           storageFile: await Tool.compressImage(File(fileImage.path)),
         );
         widget.post!.pickedMedia = media;
-        //Navigator.pop(context, media);
+        widget.post!.pickedMedia!.isSelfie = whichCamera == "front";
         Navigator.pushNamed(context, '/publish', arguments: widget.post);
       } else {
         if (_start) {
@@ -114,48 +115,54 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Stack(
-          children: <Widget>[
-            FutureBuilder(
-              future: _initializeCameraControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(_cameraController);
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            _isRec == true
-                ? SafeArea(
-                    child: Container(
-                      height: 40,
-                      // alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFEE4400),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          "Бичиж байна",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Color(0xFFFAFAFA)),
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox(height: 0),
-            Positioned(
-                top: 50,
-                right: 30,
-                child: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Icon(Icons.close_rounded, color: Styles.textColor),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
+                children: <Widget>[
+                  FutureBuilder(
+                    future: _initializeCameraControllerFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return CameraPreview(_cameraController);
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
                   ),
-                ))
-          ],
+                  _isRec == true
+                      ? SafeArea(
+                          child: Container(
+                            height: 40,
+                            // alignment: Alignment.topLeft,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFEE4400),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                "Бичиж байна",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Color(0xFFFAFAFA)),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(height: 0),
+                  Positioned(
+                      top: 50,
+                      right: 30,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(Icons.close_rounded, color: Styles.textColor),
+                        ),
+                      ))
+                ],
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: Container(
           color: Colors.black,
@@ -215,12 +222,12 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
                         if (whichCamera == 'back') {
                           CameraDescription camera = widget.post!.cameras[1];
                           whichCamera = 'front';
-                          _cameraController = CameraController(camera, ResolutionPreset.medium);
+                          _cameraController = CameraController(camera, ResolutionPreset.high);
                           _initializeCameraControllerFuture = _cameraController.initialize();
                         } else {
                           CameraDescription camera = widget.post!.cameras[0];
                           whichCamera = 'back';
-                          _cameraController = CameraController(camera, ResolutionPreset.medium);
+                          _cameraController = CameraController(camera, ResolutionPreset.high);
                           _initializeCameraControllerFuture = _cameraController.initialize();
                         }
                       });
