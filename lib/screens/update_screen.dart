@@ -43,7 +43,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
               Button(
                 text: 'Шинэчлэх',
                 onTap: () {
-                  //OpenAppstore.launch(androidAppId: "com.education.sillyhouse", iOSAppId: "284882215");
+                  //OpenAppstore.launch(androidAppId: "mn.education.sillyhouse", iOSAppId: "284882215");
                   // TODO open stores
                 },
               ),

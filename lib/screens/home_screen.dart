@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/global/base_functions.dart';
 import 'package:sillyhouseorg/widgets/home_header.dart';
 import 'package:sillyhouseorg/widgets/post_widget.dart';
-import 'package:sillyhouseorg/widgets/my_media.dart';
+import 'package:sillyhouseorg/widgets/my_media_player.dart';
 import 'package:sillyhouseorg/widgets/my_story_view.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/profile_picture.dart';
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<StoryType> listStoryType = List.generate(
       listPost.length,
       (index) => StoryType(
-        media: MyMedia(url: listPost[index].coverDownloadUrl!, type: listPost[index].uploadMediaType!),
+        media: MyMediaPlayer(url: listPost[index].coverDownloadUrl!, type: listPost[index].uploadMediaType!),
         title: listPost[index].activity!.name,
       ),
     );

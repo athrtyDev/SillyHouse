@@ -1,4 +1,4 @@
-package com.education.sillyhouse
+package mn.education.sillyhouse
 
 import io.flutter.embedding.android.FlutterActivity
 

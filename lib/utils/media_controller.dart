@@ -17,7 +17,9 @@ class MediaController {
       List<Media>? listSelected = await ImagesPicker.pick(pickType: pickType, count: 1);
       if (listSelected != null && listSelected.isNotEmpty) {
         MyMediaObject media = new MyMediaObject(
-          type: listSelected[0].path.endsWith("mp4") ? "video" : "image",
+          type: listSelected[0].path.toLowerCase().endsWith("mp4") || listSelected[0].path.toLowerCase().endsWith("mov")
+              ? "video"
+              : "image",
           path: listSelected[0].path,
           storageFile: File(listSelected[0].path),
         );

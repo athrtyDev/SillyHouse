@@ -17,7 +17,7 @@ class HomeHeader extends StatelessWidget {
           InkWell(
             onTap: () {
               Flushbar(
-                message: 'Өөө, хийхээ мартчиж...',
+                message: 'Өөө, хийхээ мартсан байна...',
                 padding: EdgeInsets.all(25),
                 backgroundColor: Styles.baseColor1,
                 duration: Duration(seconds: 3),
@@ -29,7 +29,7 @@ class HomeHeader extends StatelessWidget {
           InkWell(
             onTap: () {
               Flushbar(
-                message: 'Өөө, хийхээ мартчиж...',
+                message: 'Өөө, хийхээ мартсан байна...',
                 padding: EdgeInsets.all(25),
                 backgroundColor: Styles.baseColor1,
                 duration: Duration(seconds: 3),

@@ -64,6 +64,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
                     },
                   ),
                 ),
+                SizedBox(height: 100),
               ],
             ),
           ),
@@ -80,6 +81,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
                   onTap: () {
@@ -135,7 +137,7 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
                           for (var item in listActivity)
                             InkWell(
                               onTap: () {
-                                baseFunctions.logCatcher(eventName: "Activity_List_${item.name}");
+                                baseFunctions.logCatcher(eventName: "Activity_List_${item.id}");
                                 Navigator.pushNamed(context, '/activity_instruction', arguments: item);
                               },
                               child: Container(
@@ -160,10 +162,13 @@ class _ActivityHomeScreenState extends State<ActivityHomeScreen> {
           width: width,
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            child: CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: activity.coverImageUrl!,
-              errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 18),
+            child: Hero(
+              tag: "activity${activity.id}",
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: activity.coverImageUrl!,
+                errorWidget: (context, url, error) => Icon(Icons.person_outline_rounded, size: 18),
+              ),
             ),
           ),
         ),

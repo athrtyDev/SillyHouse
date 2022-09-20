@@ -7,6 +7,7 @@ import 'package:sillyhouseorg/screens/activity_home_screen.dart';
 import 'package:sillyhouseorg/screens/coming_soon_screen.dart';
 import 'package:sillyhouseorg/screens/home_screen.dart';
 import 'package:sillyhouseorg/screens/profile_screen.dart';
+import 'package:sillyhouseorg/screens/test.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 

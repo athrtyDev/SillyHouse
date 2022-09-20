@@ -58,17 +58,20 @@ class _ActivityListScreenState extends State<ActivityListScreen> {
             },
             child: ClipRRect(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              child: RectanglePost(
-                imageUrl: activity.coverImageUrl!,
-                header: activity.name!,
-                subHeader: "2022.07.19", // TODO
-                // description: Utils.getActivityTypeName(activity.activityType!).name!,
-                // descColor: Utils.getActivityTypeColor(activity.activityType!),
-                bottomWidget: Container(
-                  width: MediaQuery.of(context).size.width - 20,
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment(1, 0),
-                  child: ChallengePoint(point: activity.skill!),
+              child: Hero(
+                tag: "activity${activity.id}",
+                child: RectanglePost(
+                  imageUrl: activity.coverImageUrl!,
+                  header: activity.name!,
+                  subHeader: "2022.07.19", // TODO
+                  // description: Utils.getActivityTypeName(activity.activityType!).name!,
+                  // descColor: Utils.getActivityTypeColor(activity.activityType!),
+                  bottomWidget: Container(
+                    width: MediaQuery.of(context).size.width - 20,
+                    padding: EdgeInsets.all(10),
+                    alignment: Alignment(1, 0),
+                    child: ChallengePoint(point: activity.skill!),
+                  ),
                 ),
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sillyhouseorg/bloc/post/cubit.dart';
 import 'package:sillyhouseorg/bloc/user/user_cubit.dart';
+import 'package:sillyhouseorg/core/classes/constant.dart';
 import 'package:sillyhouseorg/core/classes/post.dart';
 import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/core/services/api.dart';
@@ -11,7 +12,7 @@ import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/utils/utils.dart';
 import 'package:sillyhouseorg/widgets/back_button.dart';
 import 'package:sillyhouseorg/widgets/button.dart';
-import 'package:sillyhouseorg/widgets/my_media.dart';
+import 'package:sillyhouseorg/widgets/my_media_player.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/profile_picture.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
@@ -79,12 +80,12 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 child: Container(
                                   // height: 400,
                                   child: state.post.isSelfie != null && state.post.isSelfie!
-                                      ? mediaController.getFlippedImage(MyMedia(
+                                      ? mediaController.getFlippedImage(MyMediaPlayer(
                                           url: state.post.mediaDownloadUrl!,
                                           type: state.post.uploadMediaType!,
                                           placeHolderUrl: state.post.coverDownloadUrl,
                                         ))
-                                      : MyMedia(
+                                      : MyMediaPlayer(
                                           url: state.post.mediaDownloadUrl!,
                                           type: state.post.uploadMediaType!,
                                           placeHolderUrl: state.post.coverDownloadUrl,
@@ -267,9 +268,9 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                         post.listComment![index].comment!,
                         fontWeight: Styles.wNormal,
                       ),
-                      trailing: context.read<UserCubit>().state.user!.id != post.listComment![index].userId
-                          ? SizedBox()
-                          : Builder(
+                      trailing: context.read<UserCubit>().state.user!.id == post.listComment![index].userId ||
+                              context.read<UserCubit>().state.user!.type == UserRole.admin
+                          ? Builder(
                               builder: (context) => GestureDetector(
                                 onTap: () {
                                   setState(() {});
@@ -305,7 +306,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                   child: Icon(Icons.more_vert, color: Styles.textColor70, size: 20),
                                 ),
                               ),
-                            ),
+                            )
+                          : SizedBox(),
                       //trailing: Icon(Icons.menu, color: Colors.white),
                     );
                   }),

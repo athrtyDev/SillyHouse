@@ -7,7 +7,7 @@ import 'package:sillyhouseorg/core/classes/post.dart';
 import 'package:sillyhouseorg/core/classes/story_type.dart';
 import 'package:sillyhouseorg/global/base_functions.dart';
 import 'package:sillyhouseorg/widgets/icon_and_text.dart';
-import 'package:sillyhouseorg/widgets/my_media.dart';
+import 'package:sillyhouseorg/widgets/my_media_player.dart';
 import 'package:sillyhouseorg/widgets/my_story_view.dart';
 import 'package:sillyhouseorg/widgets/on_image_text.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
@@ -122,7 +122,7 @@ class _TopPostPanelState extends State<TopPostPanel> with TickerProviderStateMix
     List<StoryType> listStoryType = List.generate(
       listPost.length,
       (index) => StoryType(
-        media: MyMedia(url: listPost[index].coverDownloadUrl!, type: listPost[index].uploadMediaType!),
+        media: MyMediaPlayer(url: listPost[index].coverDownloadUrl!, type: listPost[index].uploadMediaType!),
         title: listPost[index].activity!.name,
       ),
     );

@@ -12,6 +12,9 @@ import 'package:sillyhouseorg/core/classes/picked_media.dart';
 import 'package:sillyhouseorg/core/services/api.dart';
 import 'package:sillyhouseorg/global/global.dart';
 import 'package:sillyhouseorg/utils/media_controller.dart';
+import 'package:sillyhouseorg/widgets/button.dart';
+import 'package:sillyhouseorg/widgets/my_app_bar.dart';
+import 'package:sillyhouseorg/widgets/my_text_field.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 import 'package:sillyhouseorg/widgets/activity_tile.dart';
 
@@ -50,19 +53,8 @@ class _AdminScreenState extends State<AdminScreen> with TickerProviderStateMixin
         : SafeArea(
             top: false,
             child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Styles.whiteColor,
-                leading: InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Icon(Icons.arrow_back_ios_rounded, color: Styles.textColor),
-                ),
-                title: Text('Admin panel',
-                    style: GoogleFonts.kurale(
-                      fontSize: 18,
-                      color: Styles.textColor,
-                      fontWeight: FontWeight.w500,
-                    )),
-              ),
+              appBar: myAppBar(title: "Admin panel"),
+              backgroundColor: Styles.backgroundColor,
               body: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
@@ -460,6 +452,7 @@ class _AdminScreenState extends State<AdminScreen> with TickerProviderStateMixin
                       },
                     ),
                     items: listMedia.map((media) {
+                      TextEditingController youtubeInput = TextEditingController();
                       return Builder(
                         builder: (BuildContext mediaContext) {
                           return Stack(
@@ -472,18 +465,22 @@ class _AdminScreenState extends State<AdminScreen> with TickerProviderStateMixin
                                           ?
                                           // VIDEO
                                           Container(
-                                              height: 300,
-                                              color: Colors.blueGrey,
-                                              child: Center(child: Icon(Icons.video_call_outlined)))
-                                          :
-                                          // IMAGE
-                                          media.url != null
-                                              ? CachedNetworkImage(
-                                                  imageUrl: media.url!,
-                                                  fit: BoxFit.fill,
-                                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                                )
-                                              : Image.file(media.file!, fit: BoxFit.cover))
+                                              height: 300, color: Colors.blueGrey, child: Center(child: Text('Video uploaded')))
+                                          : media.type == "youtube"
+                                              ? // youtube
+                                              Container(
+                                                  height: 300,
+                                                  color: Colors.blueGrey,
+                                                  child: Center(child: Text(media.url ?? "...")))
+                                              :
+                                              // IMAGE
+                                              media.url != null
+                                                  ? CachedNetworkImage(
+                                                      imageUrl: media.url!,
+                                                      fit: BoxFit.fill,
+                                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                                    )
+                                                  : Image.file(media.file!, fit: BoxFit.cover))
                                       : Container(
                                           height: 300,
                                           color: Colors.grey,
@@ -522,6 +519,45 @@ class _AdminScreenState extends State<AdminScreen> with TickerProviderStateMixin
                                                       height: 40,
                                                       color: Colors.lightBlueAccent,
                                                       child: Center(child: Text('video')))),
+                                              SizedBox(height: 15),
+                                              Container(
+                                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: TextField(
+                                                        controller: youtubeInput,
+                                                        decoration: InputDecoration(
+                                                          fillColor: Styles.whiteColor,
+                                                          filled: true,
+                                                          hintText: "Youtube link here...",
+                                                          hintStyle: TextStyle(
+                                                            fontFamily: 'NunitoSans',
+                                                            fontWeight: Styles.wSemiBold,
+                                                            fontSize: Styles.medium,
+                                                            color: Styles.textColor50,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 10),
+                                                    Button(
+                                                      text: 'upload',
+                                                      onTap: () {
+                                                        Media newMedia = Media(
+                                                          url: youtubeInput.text,
+                                                          type: "youtube",
+                                                        );
+                                                        myState(() {
+                                                          listMedia.removeLast();
+                                                          listMedia.add(newMedia);
+                                                          listMedia.add(new Media());
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           )))),
                               media.type != null
@@ -547,6 +583,7 @@ class _AdminScreenState extends State<AdminScreen> with TickerProviderStateMixin
                       );
                     }).toList(),
                   ),
+                  SizedBox(height: 400),
                   Container(
                     height: 60,
                     child: isUpdating

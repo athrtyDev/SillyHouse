@@ -4,8 +4,8 @@ import 'package:video_player/video_player.dart';
 class Media {
   String? url;
   String? type;
-  late VideoPlayerController videoController;
-  Future<void>? initializeVideoPlayer;
+  // late VideoPlayerController videoController;
+  // Future<void>? initializeVideoPlayer;
   String? cachePath;
   // tuslah
   File? file;

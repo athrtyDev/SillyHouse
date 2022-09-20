@@ -374,11 +374,16 @@ class Api {
     FirebaseFirestore.instance.collection('Activity').doc(activity.docId).update(activity.toJson());
   }
 
-  Future<String> uploadFile(File file, String path, String? type) async {
+  Future<String> uploadFile(File file, String storagePath, String? type) async {
+    print("${file.path} ${storagePath} ${type}");
     print("Request:::::: uploadFile");
     type = type == 'image' ? 'image/jpeg' : 'video/mp4';
-    print('File upload starting... ' + DateTime.now().toString());
-    UploadTask fileUploadTask = FirebaseStorage.instance.ref().child(path).putFile(file, SettableMetadata(contentType: type));
+    // if (file.path.toLowerCase().endsWith("mov")) type = 'video/quicktime';
+    print('File upload starting... $type ${DateTime.now().toString()}');
+    UploadTask fileUploadTask =
+        FirebaseStorage.instance.ref().child(storagePath).putFile(file, SettableMetadata(contentType: type));
+
+    // UploadTask fileUploadTask = FirebaseStorage.instance.ref().child(path).putFile(file);
     String downloadUrl = await (await fileUploadTask).ref.getDownloadURL();
     print('File upload success! ' + DateTime.now().toString());
     return downloadUrl;

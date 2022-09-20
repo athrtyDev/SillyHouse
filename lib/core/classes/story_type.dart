@@ -1,7 +1,7 @@
-import 'package:sillyhouseorg/widgets/my_media.dart';
+import 'package:sillyhouseorg/widgets/my_media_player.dart';
 
 class StoryType {
-  MyMedia? media;
+  MyMediaPlayer? media;
   String? title;
 
   StoryType({this.media, this.title});

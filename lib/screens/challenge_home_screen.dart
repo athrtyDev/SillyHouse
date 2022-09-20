@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:sillyhouseorg/global/base_functions.dart';
 import 'package:sillyhouseorg/global/global.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sillyhouseorg/widgets/my_media.dart';
+import 'package:sillyhouseorg/widgets/my_media_player.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 import 'package:sillyhouseorg/widgets/weekly_progress_bar.dart';
 
@@ -62,7 +62,7 @@ class _ChallengeHomeScreenState extends State<ChallengeHomeScreen> {
                 Container(
                   height: 300,
                   width: MediaQuery.of(context).size.width,
-                  child: MyMedia(
+                  child: MyMediaPlayer(
                     url:
                         "https://firebasestorage.googleapis.com/v0/b/education-69b9a.appspot.com/o/activity_diy%2Frainbow%20tissue%2Frainbow.mov?alt=media&token=67373a92-b771-42f5-b921-f2dc599d533b",
                     type: "video",
