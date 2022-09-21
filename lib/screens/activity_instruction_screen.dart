@@ -131,9 +131,9 @@ class _ActivityInstructionScreenState extends State<ActivityInstructionScreen> {
                   ),
                 ],
               )),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -142,8 +142,9 @@ class _ActivityInstructionScreenState extends State<ActivityInstructionScreen> {
               ],
             ),
           ),
-          SizedBox(height: 30),
-          Container(width: MediaQuery.of(context).size.width, height: 1, color: Styles.textColor10),
+          if (widget.activity.getListMedia()!.length != 1) SizedBox(height: 20),
+          if (widget.activity.getListMedia()!.length != 1)
+            Container(width: MediaQuery.of(context).size.width, height: 1, color: Styles.textColor10),
           SizedBox(height: 10),
           widget.activity.getListMedia() == null
               ? SizedBox()

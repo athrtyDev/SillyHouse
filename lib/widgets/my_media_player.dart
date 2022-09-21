@@ -125,7 +125,7 @@ class _MyMediaPlayerState extends State<MyMediaPlayer> {
           playVideoFrom: PlayVideoFrom.youtube(widget.url),
         )..initialise();
         setState(() {
-          if (widget.url.toLowerCase().contains("/shorts/")) youtubeAspectRatio = 1;
+          if (widget.url.toLowerCase().contains("/shorts/")) youtubeAspectRatio = 9 / 16;
           isVideoLoading = false;
         });
       } else if (widget.type == "video") {
