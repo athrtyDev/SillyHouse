@@ -12,9 +12,9 @@ class AppCubit extends Cubit<AppState> {
       final Api _api = Api();
       app.interfaceDynamic = await _api.getInterfaceDynamic(); // get DB version number
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String version = packageInfo.buildNumber;
+      int version = int.parse(packageInfo.buildNumber);
       print('App verions: $version vs DB version: ${app.interfaceDynamic!.appVersion}');
-      if (app.interfaceDynamic!.appVersion == version) {
+      if (int.parse(app.interfaceDynamic!.appVersion!) <= version) {
         await app.getActivityType();
         emit(LatestVersion());
       } else {
