@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pod_player/pod_player.dart';
+import 'package:sillyhouseorg/bloc/app/cubit.dart';
 import 'package:sillyhouseorg/widgets/loader.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 
@@ -43,24 +45,38 @@ class _MyMediaPlayerState extends State<MyMediaPlayer> {
     super.dispose();
   }
 
+  void _listener(BuildContext context, AppState state) {
+    if (state is PauseVideoState) {
+      if (videoController != null) videoController!.pause();
+      if (youtubeController != null) youtubeController!.pause();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.type == "image"
-        ? CachedNetworkImage(
-            width: MediaQuery.of(context).size.width,
-            imageUrl: widget.url,
-            fit: BoxFit.cover,
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          )
-        : isVideoLoading
-            ? _videoPlaceHolder()
-            : widget.type == "youtube"
-                ? PodVideoPlayer(
-                    controller: youtubeController!,
-                    frameAspectRatio: youtubeAspectRatio,
-                    videoAspectRatio: youtubeAspectRatio,
-                  )
-                : _videoPlayer();
+    return BlocListener(
+      bloc: context.read<AppCubit>(),
+      listener: _listener,
+      child: widget.type == "image"
+          ? CachedNetworkImage(
+              width: MediaQuery.of(context).size.width,
+              imageUrl: widget.url,
+              fit: BoxFit.cover,
+              placeholder: (context, url) {
+                return Loader();
+              },
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            )
+          : isVideoLoading
+              ? _videoPlaceHolder()
+              : widget.type == "youtube"
+                  ? PodVideoPlayer(
+                      controller: youtubeController!,
+                      frameAspectRatio: youtubeAspectRatio,
+                      videoAspectRatio: youtubeAspectRatio,
+                    )
+                  : _videoPlayer(),
+    );
   }
 
   Widget _videoPlayer() {

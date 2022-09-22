@@ -24,4 +24,8 @@ class AppCubit extends Cubit<AppState> {
       print('error: Failed to check version');
     }
   }
+
+  pauseVideo() {
+    emit(PauseVideoState());
+  }
 }

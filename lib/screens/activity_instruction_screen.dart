@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sillyhouseorg/bloc/app/app_cubit.dart';
 import 'package:sillyhouseorg/bloc/post/cubit.dart';
 import 'package:sillyhouseorg/bloc/user/user_cubit.dart';
 import 'package:sillyhouseorg/core/classes/activity.dart';
@@ -309,6 +310,7 @@ class _ActivityInstructionScreenState extends State<ActivityInstructionScreen> {
           ],
         ),
         onPressed: () {
+          context.read<AppCubit>().pauseVideo();
           baseFunctions.logCatcher(
             eventName: "Activity_Instruction_Upload",
             properties: {'activity': widget.activity.name},
