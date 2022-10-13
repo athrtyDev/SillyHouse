@@ -70,12 +70,24 @@ class _MyMediaPlayerState extends State<MyMediaPlayer> {
           : isVideoLoading
               ? _videoPlaceHolder()
               : widget.type == "youtube"
-                  ? PodVideoPlayer(
-                      controller: youtubeController!,
-                      frameAspectRatio: youtubeAspectRatio,
-                      videoAspectRatio: youtubeAspectRatio,
-                    )
+                  ? _youtubePlayer()
                   : _videoPlayer(),
+    );
+  }
+
+  _youtubePlayer() {
+    return InkWell(
+      onTap: () {
+        print('aaaa');
+        setState(() {
+          youtubeController!.togglePlayPause();
+        });
+      },
+      child: PodVideoPlayer(
+        controller: youtubeController!,
+        frameAspectRatio: youtubeAspectRatio,
+        videoAspectRatio: youtubeAspectRatio,
+      ),
     );
   }
 
@@ -83,7 +95,7 @@ class _MyMediaPlayerState extends State<MyMediaPlayer> {
     return Container(
       height: getVideoHeight(),
       width: MediaQuery.of(context).size.width,
-      child: GestureDetector(
+      child: InkWell(
         onTap: () {
           setState(() {
             if (videoController!.value.isPlaying)
