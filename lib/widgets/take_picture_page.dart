@@ -6,6 +6,7 @@ import 'package:sillyhouseorg/core/classes/post.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sillyhouseorg/core/services/tool.dart';
+import 'package:sillyhouseorg/global/global.dart';
 import 'package:sillyhouseorg/utils/media_controller.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
 
@@ -57,7 +58,7 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
   }
 
   _selectMedia() async {
-    MyMediaObject? media = await mediaController.galleryPicker();
+    MyMediaObject? media = await mediaController.galleryPicker(type: app.interfaceDynamic!.videoUpload ? null : "image");
     if (media == null) return;
     widget.post!.pickedMedia = media;
     Navigator.pushNamed(context, '/publish', arguments: widget.post);
@@ -171,44 +172,45 @@ class _TakePicturePageState extends State<TakePicturePage> with WidgetsBindingOb
           child: Column(
             children: [
               SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _onItemTapped(0);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: _selectedIndex == 0 ? Colors.white : Colors.transparent,
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
+              if (app.interfaceDynamic!.videoUpload)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _onItemTapped(0);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _selectedIndex == 0 ? Colors.white : Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                        ),
+                        height: 40,
+                        width: 120,
+                        child: Center(
+                            child: Text('Зураг',
+                                style: GoogleFonts.kurale(color: _selectedIndex == 0 ? Colors.black : Colors.white))),
                       ),
-                      height: 40,
-                      width: 120,
-                      child: Center(
-                          child:
-                              Text('Зураг', style: GoogleFonts.kurale(color: _selectedIndex == 0 ? Colors.black : Colors.white))),
                     ),
-                  ),
-                  SizedBox(width: 30),
-                  GestureDetector(
-                    onTap: () {
-                      _onItemTapped(1);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: _selectedIndex == 1 ? Colors.white : Colors.transparent,
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                    SizedBox(width: 30),
+                    GestureDetector(
+                      onTap: () {
+                        _onItemTapped(1);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _selectedIndex == 1 ? Colors.white : Colors.transparent,
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                        ),
+                        height: 40,
+                        width: 120,
+                        child: Center(
+                            child: Text('Бичлэг',
+                                style: GoogleFonts.kurale(color: _selectedIndex == 1 ? Colors.black : Colors.white))),
                       ),
-                      height: 40,
-                      width: 120,
-                      child: Center(
-                          child: Text('Бичлэг',
-                              style: GoogleFonts.kurale(color: _selectedIndex == 1 ? Colors.black : Colors.white))),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
               SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

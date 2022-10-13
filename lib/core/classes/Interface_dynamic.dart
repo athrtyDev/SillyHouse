@@ -10,6 +10,7 @@ class InterfaceDynamic {
   String? appVersion;
   String? homeActivityId;
   String? homeActivityType;
+  late bool videoUpload;
 
   InterfaceDynamic(
       {this.homeActivityInfo,
@@ -20,6 +21,7 @@ class InterfaceDynamic {
       this.homePosterUrl,
       this.appVersion,
       this.homeActivityId,
+      this.videoUpload = true,
       this.homeActivityType});
 
   InterfaceDynamic.fromJson(Map<String, dynamic> json) {
@@ -32,19 +34,6 @@ class InterfaceDynamic {
     appVersion = Tool.nullEmptyString(json['appVersion']);
     homeActivityId = Tool.nullEmptyString(json['homeActivityId']);
     homeActivityType = Tool.nullEmptyString(json['homeActivityType']);
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['homeActivityInfo'] = this.homeActivityInfo ?? '';
-    data['homeDanceUrl'] = this.homeDanceUrl ?? '';
-    data['homeDiscoverUrl'] = this.homeDiscoverUrl ?? '';
-    data['homeDiyUrl'] = this.homeDiyUrl ?? '';
-    data['homeGreeting'] = this.homeGreeting ?? '';
-    data['homePosterUrl'] = this.homePosterUrl ?? '';
-    data['appVersion'] = this.appVersion ?? '';
-    data['homeActivityId'] = this.homeActivityId ?? '';
-    data['homeActivityType'] = this.homeActivityType ?? '';
-    return data;
+    videoUpload = json['videoUpload'] ?? false;
   }
 }
