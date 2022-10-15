@@ -25,6 +25,7 @@ class Post {
   late String likedUserIds;
   late int commentCount;
   bool? isSelfie;
+  bool? hide;
   // tuslah
   bool isUserLiked = false;
   List<Comment>? listComment;
@@ -50,6 +51,7 @@ class Post {
       this.likedUserIds = "",
       this.commentCount = 0,
       this.isSelfie,
+      this.hide = false,
       this.skillPoints});
 
   Post.fromJson(Map<String, dynamic> json) {
@@ -76,6 +78,7 @@ class Post {
     likedUserIds = json['likedUserIds'] ?? "";
     commentCount = json['commentCount'] != null ? int.parse(json['commentCount'].toString()) : 0;
     if (json['isSelfie'] != null) isSelfie = json['isSelfie'];
+    hide = json['hide'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -97,6 +100,7 @@ class Post {
     data['likeCount'] = this.likeCount;
     data['likedUserIds'] = this.likedUserIds;
     data['commentCount'] = this.commentCount;
+    data['hide'] = this.hide;
     data['isFeatured'] = this.isFeatured ?? '';
     return data;
   }

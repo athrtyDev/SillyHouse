@@ -15,6 +15,7 @@ class Activity {
   String? name;
   int? skill; // biyluuleed awah onoo. Herew 0 baiwal app deer haruulahgui
   int? version; // cache version. Updates cache when version mismatches
+  int? mediaHeight;
   // tuslah
   int? age;
   int? postCount; // posts from other kids
@@ -36,6 +37,7 @@ class Activity {
     String? mediaUrlAllMeta,
     String? name,
     int? skill,
+    int? mediaHeight,
     int? version,
   }) {
     return Activity(
@@ -53,6 +55,7 @@ class Activity {
       name: name ?? this.name,
       skill: skill ?? this.skill,
       version: version ?? this.version,
+      mediaHeight: mediaHeight ?? this.mediaHeight,
     );
   }
 
@@ -72,6 +75,7 @@ class Activity {
       this.mediaUrlAll,
       this.mediaUrlAllMeta,
       this.isActive,
+      this.mediaHeight,
       this.cachePathCoverImg});
 
   Activity.fromJson(Map<String, dynamic> json) {
@@ -90,6 +94,7 @@ class Activity {
     activityType = json['activityType'] ?? null;
     isFeatured = json['isFeatured'] ?? false;
     isActive = json['isActive'] ?? true;
+    mediaHeight = json['mediaHeight'];
   }
 
   Map<String, dynamic> toJson() {

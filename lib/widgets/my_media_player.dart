@@ -87,6 +87,7 @@ class _MyMediaPlayerState extends State<MyMediaPlayer> {
         controller: youtubeController!,
         frameAspectRatio: youtubeAspectRatio,
         videoAspectRatio: youtubeAspectRatio,
+        alwaysShowProgressBar: true,
       ),
     );
   }

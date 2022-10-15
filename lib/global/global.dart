@@ -49,30 +49,30 @@ class Globals {
     return activityTypes;
   }
 
-  Future<List<Post>?> getAllPost(String userId) async {
-    if (allPost == null) {
-      final Api _api = Api();
-      allPost = await _api.getAllPost();
-      if (allPost != null) {
-        for (var item in allPost!) {
-          item.isUserLiked = item.likedUserIds.contains(userId);
-        }
-      }
-    }
-    return allPost;
-  }
-
-  Future<List<Post>?> getListNormalPost(String userId) async {
-    List<Post>? all = await getAllPost(userId);
-    List<Post> listNormal = [];
-    if (all != null) for (var item in all) if (item.isFeatured == null || !item.isFeatured!) listNormal.add(item);
-    return listNormal;
-  }
-
-  Future<List<Post>?> getListFeaturedPost(String userId) async {
-    List<Post>? all = await getAllPost(userId);
-    List<Post> listFeatured = [];
-    if (all != null) for (var item in all) if (item.isFeatured != null && item.isFeatured!) listFeatured.add(item);
-    return listFeatured;
-  }
+  // Future<List<Post>?> getAllPost(String userId) async {
+  //   if (allPost == null) {
+  //     final Api _api = Api();
+  //     allPost = await _api.getAllPost();
+  //     if (allPost != null) {
+  //       for (var item in allPost!) {
+  //         item.isUserLiked = item.likedUserIds.contains(userId);
+  //       }
+  //     }
+  //   }
+  //   return allPost;
+  // }
+  //
+  // Future<List<Post>?> getListNormalPost(String userId) async {
+  //   List<Post>? all = await getAllPost(userId);
+  //   List<Post> listNormal = [];
+  //   if (all != null) for (var item in all) if (item.isFeatured == null || !item.isFeatured!) listNormal.add(item);
+  //   return listNormal;
+  // }
+  //
+  // Future<List<Post>?> getListFeaturedPost(String userId) async {
+  //   List<Post>? all = await getAllPost(userId);
+  //   List<Post> listFeatured = [];
+  //   if (all != null) for (var item in all) if (item.isFeatured != null && item.isFeatured!) listFeatured.add(item);
+  //   return listFeatured;
+  // }
 }

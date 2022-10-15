@@ -190,6 +190,7 @@ class Api {
       postJson['coverDownloadUrl'] = post.uploadMediaType == 'video' ? coverDownloadUrl : downloadUrl;
       postJson['postDate'] = DateTime.now();
       postJson['isSelfie'] = post.pickedMedia!.isSelfie != null && post.pickedMedia!.isSelfie!;
+      postJson['hide'] = false;
 
       // order -> batch
       var db = FirebaseFirestore.instance;
@@ -221,9 +222,42 @@ class Api {
     }
   }
 
-  Future<List<Post>?> getAllPost() async {
-    print("Request:::::: getAllPost");
-    QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Post').orderBy('postDate', descending: true).get();
+  // Future<List<Post>?> getAllPost() async {
+  //   print("Request:::::: getAllPost");
+  //   QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Post').orderBy('postDate', descending: true).get();
+  //   if (postSnapshot.docs.isEmpty) {
+  //     return null;
+  //   } else {
+  //     List<Post>? listAll = [];
+  //     for (var item in postSnapshot.docs) {
+  //       Post post = new Post.fromJson(item.data() as Map<String, dynamic>);
+  //       post.docId = item.id;
+  //       listAll.add(post);
+  //     }
+  //     return listAll;
+  //   }
+  // }
+  QueryDocumentSnapshot? lastDocument;
+
+  Future<List<Post>?> getPostPagination(int limit) async {
+    print("Request:::::: getPostPagination");
+    late QuerySnapshot postSnapshot;
+    if (lastDocument == null) {
+      postSnapshot = await FirebaseFirestore.instance
+          .collection('Post')
+          .where('hide', isEqualTo: false)
+          .orderBy('postDate', descending: true)
+          .limit(limit)
+          .get();
+    } else {
+      postSnapshot = await FirebaseFirestore.instance
+          .collection('Post')
+          .where('hide', isEqualTo: false)
+          .orderBy('postDate', descending: true)
+          .startAfterDocument(lastDocument!)
+          .limit(limit)
+          .get();
+    }
     if (postSnapshot.docs.isEmpty) {
       return null;
     } else {
@@ -232,6 +266,7 @@ class Api {
         Post post = new Post.fromJson(item.data() as Map<String, dynamic>);
         post.docId = item.id;
         listAll.add(post);
+        lastDocument = item;
       }
       return listAll;
     }
@@ -251,7 +286,7 @@ class Api {
     }
   }
 
-  Future<List<Post>?> getPostStory() async {
+  Future<List<Post>?> getFeaturedPost() async {
     print("Request:::::: getPostStory");
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
@@ -270,6 +305,7 @@ class Api {
     QuerySnapshot postSnapshot = await FirebaseFirestore.instance
         .collection('Post')
         .where('activityId', isEqualTo: activityId)
+        .where('hide', isEqualTo: false)
         .orderBy('postDate', descending: true)
         .get();
     if (postSnapshot.docs.isEmpty) {
@@ -328,16 +364,6 @@ class Api {
     print("Request:::::: postComment");
     final CollectionReference ref = FirebaseFirestore.instance.collection('Comment');
     ref.doc().set(newComment.toJson());
-  }
-
-  Future<List<Like>?> getAllLikes() async {
-    print("Request:::::: getAllLikes");
-    QuerySnapshot postSnapshot = await FirebaseFirestore.instance.collection('Like').get();
-    if (postSnapshot.docs.isEmpty) {
-      return null;
-    } else {
-      return postSnapshot.docs.map((like) => new Like.fromJson(like.data() as Map<String, dynamic>)).toList();
-    }
   }
 
   Future<List<Like>?> getLikeByUser(String userId) async {

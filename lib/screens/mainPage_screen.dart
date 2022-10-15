@@ -2,14 +2,17 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sillyhouseorg/bloc/user/user_cubit.dart';
 import 'package:sillyhouseorg/screens/activity_home_screen.dart';
 import 'package:sillyhouseorg/screens/coming_soon_screen.dart';
 import 'package:sillyhouseorg/screens/home_screen.dart';
 import 'package:sillyhouseorg/screens/profile_screen.dart';
-import 'package:sillyhouseorg/screens/test.dart';
 import 'package:sillyhouseorg/widgets/my_text.dart';
 import 'package:sillyhouseorg/widgets/styles.dart';
+
+import '../bloc/post/cubit.dart';
 
 class MainPageScreen extends StatefulWidget {
   final dynamic args;
@@ -36,6 +39,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _showUploadStatus();
     });
+    context.read<PostCubit>().initHomePost(context.read<UserCubit>().state.user!.id!);
   }
 
   @override

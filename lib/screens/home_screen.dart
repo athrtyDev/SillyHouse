@@ -24,39 +24,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  PostCubit cubit = PostCubit();
+  late PostCubit cubit;
   late User user;
+  late ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     user = context.read<UserCubit>().state.user!;
-    cubit.initHomePost(user.id!);
+    cubit = context.read<PostCubit>();
+    // cubit.initHomePost(user.id!);
+    scrollController.addListener(scrollListener);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Styles.whiteColor,
+      color: Styles.backgroundColor,
       child: SingleChildScrollView(
+        controller: scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             HomeHeader(),
             _stories(),
             _postFeed(),
-            SizedBox(height: 100),
+            SizedBox(height: 200),
           ],
         ),
       ),
     );
   }
 
+  void scrollListener() {
+    if (scrollController.offset == scrollController.position.maxScrollExtent) {
+      cubit.moreHomePost();
+    }
+  }
+
   Widget _postFeed() {
     return BlocBuilder<PostCubit, PostState>(
       bloc: cubit,
       builder: (context, state) {
-        if (state is PostHomeLoaded && state.listAllPost != null) {
+        if (state is PostHomeLoaded && state.listPost != null) {
           return Container(
             color: Styles.backgroundColor,
             child: Column(
@@ -72,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     children: [
-                      for (var item in state.listAllPost!)
+                      for (var item in state.listPost!)
                         Container(
                           margin: EdgeInsets.only(bottom: 20),
                           child: ClipRRect(
@@ -109,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                      if (state.isLoading) CircularProgressIndicator(),
                     ],
                   ),
                 ),

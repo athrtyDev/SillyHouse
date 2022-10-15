@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sillyhouseorg/bloc/post/post_cubit.dart';
 import 'package:sillyhouseorg/core/classes/constant.dart';
 import 'package:sillyhouseorg/global/global.dart';
 import 'package:sillyhouseorg/router.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
   final AppRouter _appRouter = AppRouter();
   final AppCubit appCubit = AppCubit();
   final UserCubit userCubit = UserCubit();
+  final PostCubit postCubit = PostCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<UserCubit>(
             create: (context) => userCubit,
+          ),
+          BlocProvider<PostCubit>(
+            create: (context) => postCubit,
           ),
         ],
         child: MaterialApp(

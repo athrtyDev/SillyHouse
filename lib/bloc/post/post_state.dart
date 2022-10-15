@@ -13,20 +13,22 @@ class PostErrorState extends PostState {
 }
 
 class PostHomeLoaded extends PostState {
-  List<Post>? listAllPost;
+  List<Post>? listPost;
   List<Post>? listFeaturedPost;
+  bool isLoading = false;
 
-  PostHomeLoaded({this.listAllPost, this.listFeaturedPost});
+  PostHomeLoaded({this.listPost, this.listFeaturedPost, this.isLoading = false});
 
-  PostHomeLoaded copyWith({List<Post>? listAllPost, List<Post>? listFeaturedPost}) {
+  PostHomeLoaded copyWith({List<Post>? listPost, List<Post>? listFeaturedPost, bool? isLoading = false}) {
     return PostHomeLoaded(
-      listAllPost: listAllPost ?? this.listAllPost,
+      listPost: listPost ?? this.listPost,
       listFeaturedPost: listFeaturedPost ?? this.listFeaturedPost,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
   @override
-  List<Object?> get props => [listAllPost, listFeaturedPost];
+  List<Object?> get props => [listPost, listFeaturedPost, isLoading];
 }
 
 class PostLoaded extends PostState {

@@ -34,12 +34,14 @@ class _ActivityInstructionScreenState extends State<ActivityInstructionScreen> {
   ScrollController? scrollViewController;
   int _carouselIndex = 0;
   bool isDynamicHeighSet = false;
+  late double carouselHeight;
 
   @override
   void initState() {
     super.initState();
     postCubit.getPostsOfActivity(widget.activity.id!);
     scrollViewController = ScrollController();
+    carouselHeight = widget.activity.mediaHeight == null ? 430 : double.parse(widget.activity.mediaHeight.toString());
   }
 
   @override
@@ -162,7 +164,7 @@ class _ActivityInstructionScreenState extends State<ActivityInstructionScreen> {
                               children: [
                                 CarouselSlider(
                                   options: CarouselOptions(
-                                    height: 430,
+                                    height: carouselHeight,
                                     viewportFraction: 1,
                                     initialPage: 0,
                                     enlargeCenterPage: false,
