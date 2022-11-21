@@ -7,8 +7,8 @@ class AlertWidget extends StatelessWidget {
       required this.content,
       required this.actionText1,
       required this.actionRoute1,
-        this.actionText2,
-        this.actionRoute2})
+      this.actionText2,
+      this.actionRoute2})
       : super(key: key);
 
   final String title;
@@ -24,20 +24,20 @@ class AlertWidget extends StatelessWidget {
       title: Text(title),
       content: Text(content),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(actionText1),
           onPressed: () {
-            if(actionRoute1 != null && actionRoute1 != '')
+            if (actionRoute1 != '')
               Navigator.pushNamed(context, actionRoute1);
             else
               Navigator.pop(context);
           },
         ),
         actionText2 != null
-            ? FlatButton(
+            ? TextButton(
                 child: Text(actionText2!),
                 onPressed: () {
-                  if(actionRoute2 != null && actionRoute2 != '')
+                  if (actionRoute2 != null && actionRoute2 != '')
                     Navigator.pushNamed(context, actionRoute2!);
                   else
                     Navigator.pop(context);
