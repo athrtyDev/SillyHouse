@@ -190,10 +190,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       leading: Icon(Icons.admin_panel_settings_outlined, color: Styles.textColor),
                       title: MyText.large('Админ'),
                       onTap: () async {
+                        Navigator.pop(context);
                         Navigator.pushNamed(context, '/admin');
                       },
                     ),
                   if (user.type != null && user.type == UserRole.admin) Divider(color: Colors.grey[300], height: 1, thickness: 2),
+                  ListTile(
+                    leading: Icon(Icons.remove_circle_outline, color: Styles.textColor),
+                    title: MyText.large('Хэрэглэгч устгах'),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      removeUserDialog();
+                    },
+                  ),
                   ListTile(
                     leading: Icon(Icons.exit_to_app, color: Styles.textColor),
                     title: MyText.large('Гарах'),
@@ -208,5 +217,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         });
+  }
+
+  Future<void> removeUserDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: MyText.large('Хэрэглэгч устгах'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                MyText(
+                    'Устгасан тохиолдолд таны бүх мэдээлэл болон хийж байсан бүтээлүүд устах болно.\n\nТа устгахдаа итгэлтэй байна уу?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: MyText('Буцах', fontWeight: Styles.wBold),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: MyText('Устгах', fontWeight: Styles.wBold),
+              onPressed: () {
+                context.read<UserCubit>().removeUser();
+                Navigator.of(context).pushNamedAndRemoveUntil('/greeting', (Route<dynamic> route) => false);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

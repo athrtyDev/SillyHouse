@@ -11,15 +11,9 @@ class UserState {
   }
 
   factory UserState.fromMap(Map<String, dynamic>? map) {
-    if (map == null)
-      return UserState(
-        user: User.initial(),
-      );
-    ;
+    if (map == null) return UserState(user: null);
 
-    return UserState(
-      user: User.fromJson(map),
-    );
+    return UserState(user: User.fromJson(map));
   }
 
   String toJson() => json.encode(toMap());

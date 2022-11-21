@@ -60,6 +60,13 @@ class Api {
     return customerSnapshot.docs.isNotEmpty;
   }
 
+  Future<void> removeUser(String userId) async {
+    print("Request:::::: removeUser");
+    FirebaseFirestore.instance.collection('User').where("id", isEqualTo: userId).get().then((snapshot) {
+      snapshot.docs.first.reference.delete();
+    });
+  }
+
   Future<List<ActivityType>?> getActivityType() async {
     print("Request:::::: getActivityType");
     QuerySnapshot itemSnapshot =

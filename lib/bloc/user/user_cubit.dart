@@ -53,8 +53,20 @@ class UserCubit extends Cubit<UserState> with HydratedMixin {
     }
   }
 
+  void removeUser() async {
+    try {
+      print("zzzz ${state.user!.id}");
+      final Api api = Api();
+      api.removeUser(state.user!.id!);
+      logOut();
+    } on Exception catch (_) {
+      emit(UserState(user: null));
+    }
+  }
+
   void logOut() async {
     app.allPost = null; // post awahdaa tuhain user like darsan esehiig tootsoj bga bolhor null bolgoh
+    clear();
     emit(UserState(user: null));
   }
 
