@@ -55,7 +55,6 @@ class UserCubit extends Cubit<UserState> with HydratedMixin {
 
   void removeUser() async {
     try {
-      print("zzzz ${state.user!.id}");
       final Api api = Api();
       api.removeUser(state.user!.id!);
       logOut();

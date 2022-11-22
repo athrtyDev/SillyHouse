@@ -54,30 +54,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: SingleChildScrollView(
                     controller: _controller,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         _profilePicture(),
+                        MyText("Эцэг, эхийн и-мэйл"),
+                        SizedBox(height: 5),
                         MyTextField(
                           controller: _emailInput,
                           keyboardType: TextInputType.emailAddress,
                           icon: Icons.email,
                           hintText: "Эцэг, эхийн и-мэйл",
                         ),
+                        MyText("Нэвтрэх нэр"),
+                        SizedBox(height: 5),
                         MyTextField(
                           controller: _nameInput,
                           keyboardType: TextInputType.text,
                           icon: Icons.person,
                           hintText: "Хүүхдийн нэвтрэх нэр",
                         ),
+                        Row(
+                          children: [
+                            MyText("Нас"),
+                            MyText(" /заавал биш/", textColor: Styles.textColor70),
+                          ],
+                        ),
+                        SizedBox(height: 5),
                         MyTextField(
                           controller: _ageInput,
                           keyboardType: TextInputType.number,
                           icon: Icons.calendar_today_rounded,
                           hintText: "Хүүхдийн нас",
                         ),
+                        Row(
+                          children: [
+                            MyText("Хүйс"),
+                            MyText(" /заавал биш/", textColor: Styles.textColor70),
+                          ],
+                        ),
+                        SizedBox(height: 5),
                         sexSelector(),
+                        MyText("Нууц үг"),
+                        SizedBox(height: 5),
                         MyTextField(
                           controller: _passwordInput,
-                          keyboardType: TextInputType.number,
                           icon: Icons.security_rounded,
                           hintText: "Нууц үг",
                           isPassword: true,
@@ -120,13 +140,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _profilePicture() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 30),
-      child: Container(
-        width: 80,
-        height: 80,
-        child: ProfilePicture(file: profileFile, onTap: () => _addPicture(), isSelfie: isSelfie),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: 20),
+          child: Container(
+            width: 80,
+            height: 80,
+            child: ProfilePicture(file: profileFile, onTap: () => _addPicture(), isSelfie: isSelfie),
+          ),
+        ),
+      ],
     );
   }
 
@@ -201,7 +226,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   _register() async {
     if (isLoading) return;
-    if (_nameInput.text == '' || _passwordInput.text == '' || _ageInput.text == '' || _emailInput.text == '' || gender == "") {
+    if (_nameInput.text == '' || _passwordInput.text == '' || _emailInput.text == '') {
       Flushbar(
         message: 'Мэдээллээ бүрэн оруулна уу.',
         padding: EdgeInsets.all(25),
